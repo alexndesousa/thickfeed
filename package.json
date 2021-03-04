@@ -1,0 +1,27 @@
+{
+  "name": "thickfeed-apis",
+  "version": "0.0.1",
+  "description": "APIs for use with thickfeed",
+  "main": "app.js",
+  "directories": {
+    "test": "tests"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "node-fetch": "^2.6.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alexndesousa/thickfeed-apis.git"
+  },
+  "author": "Alex De Sousa",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/alexndesousa/thickfeed-apis/issues"
+  },
+  "homepage": "https://github.com/alexndesousa/thickfeed-apis#readme"
+}
