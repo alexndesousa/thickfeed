@@ -8,9 +8,11 @@ const fetch = require('node-fetch');
  * @returns A promised JSON response
  */
 const getTrending = (countryCode = 'GB', page = '', limit = 10) => {
-    const baseUrl = 'https://youtube.googleapis.com/youtube/v3/videos'
     apiKey = process.env.YOUTUBE_API_KEY
-    return fetch(`${baseUrl}?part=player&chart=mostPopular&regionCode=${countryCode}&key=${apiKey}&maxResults=${limit}&pageToken=${page}`)
+    
+    const baseUrl = 'https://youtube.googleapis.com/youtube/v3/videos'
+    const parameterisedUrl = `${baseUrl}?part=player&chart=mostPopular&regionCode=${countryCode}&key=${apiKey}&maxResults=${limit}&pageToken=${page}`
+    return fetch(parameterisedUrl)
     .then(res => res.json())
 }
 
