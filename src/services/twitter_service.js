@@ -17,7 +17,11 @@ const getTrendingTopics = (countryWOEID = 1) => {
     .then(res => res.json())
 }
 
-
+/**
+ * Retrieve the WOEID for the given country code
+ * @param {string} countryCode - country code to find a WOEID for
+ * @returns A promised string
+ */
 const getWOEID = (countryCode = null) => {
     // if no countryCode is provided we'll provide the worldwide woeid
     if (countryCode === null) {
