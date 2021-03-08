@@ -17,3 +17,7 @@ const getTrendingTopics = (countryWOEID = 1) => {
     return fetch(parameterisedUrl, options)
     .then(res => res.json())
 }
+
+module.exports = {
+    getTrendingTopics
+}
