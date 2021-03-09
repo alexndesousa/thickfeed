@@ -8,10 +8,13 @@ const fetch = require('node-fetch');
  * @returns A promised JSON response
  */
 const getHot = (subreddit = 'all', after = '', limit = 10) => {
-    return fetch(`https://www.reddit.com/r/${subreddit}/hot.json?after=${after}&limit=${limit}`)
-        .then(res => res.json())
-}
+  const baseUrl = `https://www.reddit.com/r/${subreddit}/hot.json`;
+  const parameterisedUrl = `${baseUrl}?after=${after}&limit=${limit}`;
+
+  return fetch(parameterisedUrl)
+    .then((res) => res.json());
+};
 
 module.exports = {
-    getHot
-}
+  getHot,
+};
