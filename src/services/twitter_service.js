@@ -37,12 +37,12 @@ const getWOEID = (countryCode = null) => {
   return fetch(baseUrl, options)
     .then((res) => res.json())
     .then((body) => {
-      for (i = 0; i < body.length; i++) {
-        if (body[i].countryCode == countryCode) {
-          console.log(body[i].parentid);
+      for (let i = 0; i < body.length; i += 1) {
+        if (body[i].countryCode === countryCode) {
           return body[i].parentid;
         }
       }
+      return 1;
     });
 };
 
