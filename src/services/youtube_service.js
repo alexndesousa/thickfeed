@@ -7,7 +7,7 @@ const fetch = require('node-fetch');
  * @param {number} limit - The max number of videos to retrieve
  * @returns A promised JSON response
  */
-const getTrending = (countryCode = 'GB', page = '', limit = 10) => {
+const getTrendingVideos = (countryCode = 'GB', page = '', limit = 10) => {
   const apiKey = process.env.YOUTUBE_API_KEY;
 
   const baseUrl = 'https://youtube.googleapis.com/youtube/v3/videos';
@@ -17,5 +17,5 @@ const getTrending = (countryCode = 'GB', page = '', limit = 10) => {
 };
 
 module.exports = {
-  getTrending,
+  getTrendingVideos,
 };
