@@ -53,11 +53,11 @@ const getWOEID = (countryCode = null) => {
  * @param {number} limit - The max number of tweets to retrieve
  * @returns A promised JSON response
  */
-const searchTweets = (searchTerm, type = 'popular', limit = 10) => {
-  const encodedSearchTerm = encodeURI(searchTerm);
+const searchTweets = (searchTerm, type = 'popular', limit = 10, maxId = 0) => {
+  const encodedSearchTerm = encodeURIComponent(searchTerm);
 
   const baseUrl = 'https://api.twitter.com/1.1/search/tweets.json';
-  const parameterisedUrl = `${baseUrl}?q=${encodedSearchTerm}&result_type=${type}&count=${limit}`;
+  const parameterisedUrl = `${baseUrl}?max_id=${maxId}&q=${encodedSearchTerm}&result_type=${type}&count=${limit}`;
   const bearerToken = process.env.TWITTER_BEARER_TOKEN;
   const options = {
     headers: { Authorization: `Bearer ${bearerToken}` },
