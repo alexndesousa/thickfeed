@@ -7,9 +7,9 @@ const fetch = require('node-fetch');
  * @param {number} limit - The maximum number of posts to retrieve
  * @returns A promised JSON response
  */
-const getHot = (subreddit = 'all', after = '', limit = 10) => {
+const getHot = (subreddit = 'popular', after = '', limit = 10, countryCode = 'GLOBAL') => {
   const baseUrl = `https://www.reddit.com/r/${subreddit}/hot.json`;
-  const parameterisedUrl = `${baseUrl}?after=${after}&limit=${limit}`;
+  const parameterisedUrl = `${baseUrl}?after=${after}&limit=${limit}&geo_filter=${countryCode}`;
 
   return fetch(parameterisedUrl)
     .then((res) => res.json());
