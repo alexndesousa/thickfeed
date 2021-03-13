@@ -18,23 +18,23 @@ const getHot = (subreddit = 'popular', after = '', limit = 10, countryCode = 'GL
 /**
  * Converts a t3 (what reddit calls a posts data in the response body) into an embeddable link
  * @param {json} t3 - The information relating to a specific post
- * @returns A string containing HTML
+ * @returns A string containing the embeddable HTML
  */
-const createEmbed = (t3) => {
+const createEmbeddedReddit = (t3) => {
   const baseUrl = 'https://www.reddit.com';
   const postLink = `${baseUrl}${t3.data.permalink}`;
   const postTitle = t3.title;
   const prefixedSubreddit = t3.data.subreddit_name_prefixed;
   const subredditLink = `${baseUrl}${prefixedSubreddit}`;
-  const embeddedLink = `<blockquote class="reddit-card">
+  const embeddedPost = `<blockquote class="reddit-card">
     <a href="${postLink}">${postTitle}</a> from <a href="${subredditLink}">${prefixedSubreddit}</a>
-  </blockquote>
+    </blockquote>
     <script async src="//embed.redditmedia.com/widgets/platform.js" charset="UTF-8"></script>`;
 
-  return embeddedLink;
+  return embeddedPost;
 };
 
 module.exports = {
   getHot,
-  createEmbed,
+  createEmbeddedReddit,
 };
