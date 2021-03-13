@@ -16,6 +16,21 @@ const getTrendingVideos = (countryCode = 'GB', page = '', limit = 10) => {
     .then((res) => res.json());
 };
 
+/**
+ * Creates an embeddable iframe for a given youtube video
+ * @param {JSON} video - JSON containing information pertaning to a video
+ * @param {number} width - The width of the embedded video
+ * @param {number} height - The height of the embedded video
+ * @returns A string containing the embeddable html
+ */
+const createEmbeddedYoutube = (video, width = 480, height = 270) => {
+  const baseUrl = `https://www.youtube.com/embed/${video.id}?modestbranding=1`;
+  const embeddableHtml = `<iframe id="ytplayer" type="text/html" width="${width}" height="${height}"src="${baseUrl}"frameborder="0"></iframe>`;
+
+  return embeddableHtml;
+};
+
 module.exports = {
   getTrendingVideos,
+  createEmbeddedYoutube,
 };

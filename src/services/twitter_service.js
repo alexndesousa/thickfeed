@@ -60,15 +60,37 @@ const searchTweets = (searchTerm, type = 'popular', limit = 10, maxId = 0) => {
   const parameterisedUrl = `${baseUrl}?max_id=${maxId}&q=${encodedSearchTerm}&result_type=${type}&count=${limit}`;
   const bearerToken = process.env.TWITTER_BEARER_TOKEN;
   const options = {
-    headers: { Authorization: `Bearer ${bearerToken}` },
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${bearerToken}`,
+    },
   };
 
   return fetch(parameterisedUrl, options)
     .then((res) => res.json());
 };
 
+/**
+ * Retrieve the embeddable HTML for the tweet
+ * @param {JSON} tweet - json containing all the information pertaining to a tweet
+ * @param {number} maxWidth - The maximum width of the desired embedded tweet
+ * @param {string} theme - The theme of the tweet; can either be 'light' or 'dark'
+ * @returns A promised string containing HTML
+ */
+const createEmbeddedTwitter = (tweet, maxWidth = 300, theme = 'light') => {
+  const sourceTweet = encodeURIComponent(`https://twitter.com/${tweet.user.screen_name}/status/${tweet.id_str}`);
+
+  const baseUrl = 'https://publish.twitter.com/oembed';
+  const parameterisedUrl = `${baseUrl}?url=${sourceTweet}&maxwidth=${maxWidth}&theme=${theme}`;
+
+  return fetch(parameterisedUrl)
+    .then((res) => res.json())
+    .then((body) => body.html);
+};
+
 module.exports = {
   getTrendingTopics,
   getWOEID,
   searchTweets,
+  createEmbeddedTwitter,
 };
