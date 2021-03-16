@@ -25,7 +25,7 @@ const getTrendingVideos = (countryCode = 'GB', page = '', limit = 10) => {
  */
 const createEmbeddedYoutube = (video, width = 480, height = 270) => {
   const baseUrl = `https://www.youtube.com/embed/${video.id}?modestbranding=1`;
-  const embeddableHtml = `<iframe id="ytplayer" type="text/html" width="${width}" height="${height}"src="${baseUrl}"frameborder="0"></iframe>`;
+  const embeddableHtml = `<iframe id="ytplayer" type="text/html" width="${width}" height="${height}"src="${baseUrl}"frameborder="0"allowfullscreen="allowfullscreen"></iframe>`;
 
   return embeddableHtml;
 };

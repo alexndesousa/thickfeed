@@ -31,7 +31,7 @@ const getAccessToken = () => {
  * @param {string} countryCode - The country for which we want to find new releases for
  * @param {number} offset - The amount we want to offset the results by; used for pagination
  * @param {number} limit - The maximum amount of releases we want to retreive
- * @param {*} accessToken - The access token to authenticate the request
+ * @param {string} accessToken - The access token to authenticate the request
  * @returns A promised JSON response
  */
 const getNewReleases = (countryCode = 'GB', offset = 0, limit = 10, accessToken) => {

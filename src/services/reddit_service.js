@@ -26,10 +26,7 @@ const createEmbeddedReddit = (t3) => {
   const postTitle = t3.title;
   const prefixedSubreddit = t3.data.subreddit_name_prefixed;
   const subredditLink = `${baseUrl}${prefixedSubreddit}`;
-  const embeddedPost = `<blockquote class="reddit-card">
-    <a href="${postLink}">${postTitle}</a> from <a href="${subredditLink}">${prefixedSubreddit}</a>
-    </blockquote>
-    <script async src="//embed.redditmedia.com/widgets/platform.js" charset="UTF-8"></script>`;
+  const embeddedPost = `<blockquote class="reddit-card"><a href="${postLink}">${postTitle}</a> from <a href="${subredditLink}">${prefixedSubreddit}</a></blockquote><script async src="//embed.redditmedia.com/widgets/platform.js" charset="UTF-8"></script>`;
 
   return embeddedPost;
 };
