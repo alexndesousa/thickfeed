@@ -3,9 +3,10 @@ require('dotenv').config({ path: '../../.env' });
 const { getHot, createEmbeddedReddit } = require('./reddit_service');
 const { getAccessToken, getNewReleases, createEmbeddedSpotify } = require('./spotify_service');
 const {
-  getWOEID, getTrendingTopics, searchTweets, createEmbeddedTwitter,
+  getTrendingTopics, searchTweets, createEmbeddedTwitter,
 } = require('./twitter_service');
 const { getTrendingVideos, createEmbeddedYoutube } = require('./youtube_service');
+const { getWOEID } = require('../db/postgres_db');
 
 /**
  * Retrieves embeddable HTML for all of the popular/trending posts on each of the provided platforms
@@ -21,7 +22,7 @@ const { getTrendingVideos, createEmbeddedYoutube } = require('./youtube_service'
  * @param {string} options.country_code - Used to retrieve results for the given country
  * @returns An array containing the embeddable HTML for each of the provided platforms
  */
-const getTrendingFeed = (options) => {
+const generateTrendingFeed = async (options) => {
   // I need to have varying frequencies, e.g., spotify should show up every 50 scrolls for example
   const body = [];
   // placeholder for the database
@@ -32,51 +33,52 @@ const getTrendingFeed = (options) => {
     youtube: '',
   };
   if (options.spotify_enabled) {
-    getAccessToken()
+    const embeddedSongs = getAccessToken()
       .then((token) => getNewReleases(options.country_code, options.spotify_offset, 2, token))
       .then((res) => {
         pages.spotify += parseInt(res.albums.limit, 10);
         return res.albums.items;
       })
-      .then((albums) => albums.map((item) => createEmbeddedSpotify(item)))
-      .then((embedded) => body.push(embedded));
+      .then((albums) => albums.map((item) => createEmbeddedSpotify(item)));
+    body.push(embeddedSongs);
   }
   if (options.twitter_enabled) {
-    // getWOEID should be replaced with db calls
-    getWOEID(options.country_code)
+    const embeddedTweets = getWOEID(options.country_code)
       .then((WOEID) => getTrendingTopics(WOEID))
       .then((topics) => topics[0].trends[0].name)
       .then((searchTerm) => searchTweets(searchTerm, 'popular', 30, options.twitter_offset))
       .then((res) => {
-        // using regular expressions to extract the max_id (used for pagination) from the response
+        // using regular expressions to extract the max_id (used for pagination)
         const regexpMaxId = /\?max_id=(\d+)&/;
         const match = regexpMaxId.exec(res.search_metadata.next_results);
         [pages.twitter] = match;
         return res.statuses;
       })
       .then((tweets) => tweets.map((item) => createEmbeddedTwitter(item)))
-      .then((embedded) => body.push(embedded));
+      .then((embeds) => Promise.all(embeds));
+    body.push(embeddedTweets);
   }
   if (options.reddit_enabled) {
-    getHot('popular', options.reddit_offset, 20, options.country_code)
+    const embeddedPosts = getHot('popular', options.reddit_offset, 20, options.country_code)
       .then((res) => {
         pages.reddit = res.data.after;
         return res.data.children;
       })
-      .then((posts) => posts.map((item) => createEmbeddedReddit(item)))
-      .then((embedded) => body.push(embedded));
+      .then((posts) => posts.map((item) => createEmbeddedReddit(item)));
+    body.push(embeddedPosts);
   }
   if (options.youtube_enabled) {
-    getTrendingVideos(options.country_code, options.youtube_offset, 3)
+    const embeddedVideos = getTrendingVideos(options.country_code, options.youtube_offset, 3)
       .then((res) => {
         pages.youtube = res.nextPageToken;
         return res.items;
       })
-      .then((videos) => videos.map((item) => createEmbeddedYoutube(item)))
-      .then((embedded) => body.push(embedded));
+      .then((videos) => videos.map((item) => createEmbeddedYoutube(item)));
+    body.push(embeddedVideos);
   }
 
-  return body;
+  return Promise.all(body)
+    .then((htmls) => htmls.flat());
 };
 
 // const option = {
@@ -90,7 +92,8 @@ const getTrendingFeed = (options) => {
 //   youtube_offset: '',
 //   country_code: 'GB',
 // };
+// getTrendingFeed(option).then((body) => console.log(body));
 
 module.exports = {
-  getTrendingFeed,
+  generateTrendingFeed,
 };
