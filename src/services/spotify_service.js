@@ -1,10 +1,18 @@
 const fetch = require('node-fetch');
 const { URLSearchParams } = require('url');
+const { setAuthToken, getAuthToken } = require('../db/redis_db');
+
 /**
  * Retrieve a client bearer access token to authorize requests to spotify
- * @returns A promised string
+ * @returns A string containing the access token
  */
-const getAccessToken = () => {
+const getAccessToken = async () => {
+  // if the token exists in redis, lets retrieve it from there instead
+  const authToken = await getAuthToken('spotify');
+  if (authToken !== null) {
+    return authToken;
+  }
+
   const clientId = process.env.SPOTIFY_CLIENT_ID;
   const clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
   const baseUrl = 'https://accounts.spotify.com/api/token';
@@ -21,9 +29,10 @@ const getAccessToken = () => {
     },
   };
 
-  return fetch(baseUrl, options)
-    .then((res) => res.json())
-    .then((res) => res.access_token);
+  const res = await fetch(baseUrl, options);
+  const resJSON = await res.json();
+  await setAuthToken('spotify', resJSON.access_token, resJSON.expires_in);
+  return resJSON.access_token;
 };
 
 /**
