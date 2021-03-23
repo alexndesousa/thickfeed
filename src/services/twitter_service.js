@@ -54,6 +54,9 @@ const getWOEID = (countryCode = null) => {
  * @returns A promised JSON response
  */
 const searchTweets = (searchTerm, type = 'popular', limit = 10, maxId = 0, language = 'en') => {
+  if (maxId === null) {
+    maxId = 0;
+  }
   const encodedSearchTerm = encodeURIComponent(searchTerm);
 
   const baseUrl = 'https://api.twitter.com/1.1/search/tweets.json';

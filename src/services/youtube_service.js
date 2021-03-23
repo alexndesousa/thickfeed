@@ -8,6 +8,9 @@ const fetch = require('node-fetch');
  * @returns A promised JSON response
  */
 const getTrendingVideos = (countryCode = 'GB', page = '', limit = 10) => {
+  if (page === null) {
+    page = '';
+  }
   const apiKey = process.env.YOUTUBE_API_KEY;
 
   const baseUrl = 'https://youtube.googleapis.com/youtube/v3/videos';

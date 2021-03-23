@@ -44,6 +44,9 @@ const getAccessToken = async () => {
  * @returns A promised JSON response
  */
 const getNewReleases = (countryCode = 'GB', offset = 0, limit = 10, accessToken) => {
+  if (offset === null) {
+    offset = 0;
+  }
   const baseUrl = 'https://api.spotify.com/v1/browse/new-releases';
   const parameterisedUrl = `${baseUrl}?country=${countryCode}&limit=${limit}&offset=${offset}`;
 

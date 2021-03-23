@@ -8,6 +8,9 @@ const fetch = require('node-fetch');
  * @returns A promised JSON response
  */
 const getHot = (subreddit = 'popular', after = '', limit = 10, countryCode = 'GLOBAL') => {
+  if (after === null) {
+    after = '';
+  }
   const baseUrl = `https://www.reddit.com/r/${subreddit}/hot.json`;
   const parameterisedUrl = `${baseUrl}?after=${after}&limit=${limit}&geo_filter=${countryCode}`;
 
