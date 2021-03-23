@@ -7,6 +7,7 @@ const {
 } = require('./twitter_service');
 const { getTrendingVideos, createEmbeddedYoutube } = require('./youtube_service');
 const { getWOEID } = require('../db/postgres_db');
+const { setPlatformOffset } = require('../db/redis_db');
 
 /**
  * Retrieves embeddable HTML for all of the popular/trending posts on each of the provided platforms
@@ -32,11 +33,15 @@ const generateTrendingFeed = async (options) => {
     reddit: '',
     youtube: '',
   };
+
   if (options.spotify_enabled) {
     const embeddedSongs = getAccessToken()
       .then((token) => getNewReleases(options.country_code, options.spotify_offset, 2, token))
       .then((res) => {
         pages.spotify += parseInt(res.albums.limit, 10);
+
+        setPlatformOffset('spotify', parseInt(res.albums.limit, 10));
+
         return res.albums.items;
       })
       .then((albums) => albums.map((item) => createEmbeddedSpotify(item)));
@@ -52,16 +57,23 @@ const generateTrendingFeed = async (options) => {
         const regexpMaxId = /\?max_id=(\d+)&/;
         const match = regexpMaxId.exec(res.search_metadata.next_results);
         [pages.twitter] = match;
+
+        setPlatformOffset('twitter', match[1]);
+
         return res.statuses;
       })
       .then((tweets) => tweets.map((item) => createEmbeddedTwitter(item)))
-      .then((embeds) => Promise.all(embeds));
+      .then((embeds) => Promise.all(embeds))
+      .catch();
     body.push(embeddedTweets);
   }
   if (options.reddit_enabled) {
     const embeddedPosts = getHot('popular', options.reddit_offset, 20, options.country_code)
       .then((res) => {
         pages.reddit = res.data.after;
+
+        setPlatformOffset('reddit', res.data.after);
+
         return res.data.children;
       })
       .then((posts) => posts.map((item) => createEmbeddedReddit(item)));
@@ -71,14 +83,17 @@ const generateTrendingFeed = async (options) => {
     const embeddedVideos = getTrendingVideos(options.country_code, options.youtube_offset, 3)
       .then((res) => {
         pages.youtube = res.nextPageToken;
+
+        setPlatformOffset('youtube', res.nextPageToken);
+
         return res.items;
       })
       .then((videos) => videos.map((item) => createEmbeddedYoutube(item)));
     body.push(embeddedVideos);
   }
 
-  return Promise.all(body)
-    .then((htmls) => htmls.flat());
+  const htmls = await Promise.all(body);
+  return htmls.flat();
 };
 
 // const option = {
@@ -92,7 +107,7 @@ const generateTrendingFeed = async (options) => {
 //   youtube_offset: '',
 //   country_code: 'GB',
 // };
-// getTrendingFeed(option).then((body) => console.log(body));
+// generateTrendingFeed(option).then((body) => console.log(body));
 
 module.exports = {
   generateTrendingFeed,
