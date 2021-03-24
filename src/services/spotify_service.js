@@ -1,6 +1,7 @@
 const fetch = require('node-fetch');
 const { URLSearchParams } = require('url');
 const { setAuthToken, getAuthToken } = require('../db/redis_db');
+const { setPlatformOffset } = require('../db/redis_db');
 
 /**
  * Retrieve a client bearer access token to authorize requests to spotify
@@ -36,28 +37,35 @@ const getAccessToken = async () => {
 };
 
 /**
- * Retrieve the new releases in a given country
+ * Retrieve the new releases in a given country and store the offset in redis
  * @param {string} countryCode - The country for which we want to find new releases for
  * @param {number} offset - The amount we want to offset the results by; used for pagination
  * @param {number} limit - The maximum amount of releases we want to retreive
  * @param {string} accessToken - The access token to authenticate the request
- * @returns A promised JSON response
+ * @returns A JSON containing the song information
  */
-const getNewReleases = (countryCode = 'GB', offset = 0, limit = 10, accessToken) => {
+const getNewSpotifyReleases = async (countryCode = 'GB', offset = 0, limit = 10) => {
   if (offset === null) {
     offset = 0;
   }
   const baseUrl = 'https://api.spotify.com/v1/browse/new-releases';
   const parameterisedUrl = `${baseUrl}?country=${countryCode}&limit=${limit}&offset=${offset}`;
 
+  const accessToken = await getAccessToken();
   const options = {
     headers: {
       Authorization: `Bearer ${accessToken}`,
     },
   };
 
-  return fetch(parameterisedUrl, options)
-    .then((res) => res.json());
+  const newReleases = await fetch(parameterisedUrl, options);
+  const newReleasesJSON = await newReleases.json();
+
+  await setPlatformOffset('spotify', parseInt(newReleasesJSON.albums.limit, 10));
+
+  const albums = newReleasesJSON.albums.items;
+  const albumIds = await albums.map((album) => album.id);
+  return albumIds;
 };
 
 /**
@@ -76,6 +84,6 @@ const createEmbeddedSpotify = (album, width = 300, height = 380) => {
 
 module.exports = {
   getAccessToken,
-  getNewReleases,
+  getNewSpotifyReleases,
   createEmbeddedSpotify,
 };

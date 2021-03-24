@@ -1,13 +1,14 @@
 const fetch = require('node-fetch');
+const { setPlatformOffset } = require('../db/redis_db');
 
 /**
- * Retrieve trending videos for a given country
+ * Retrieve trending videos for a given country and store the pagination offset in redis
  * @param {string} countryCode - The country to receive trending videos for
  * @param {string} page - Used for pagination
  * @param {number} limit - The max number of videos to retrieve
- * @returns A promised JSON response
+ * @returns A JSON response containing videos information
  */
-const getTrendingVideos = (countryCode = 'GB', page = '', limit = 10) => {
+const getTrendingYoutubeVideos = async (countryCode = 'GB', page = '', limit = 10) => {
   if (page === null) {
     page = '';
   }
@@ -15,8 +16,17 @@ const getTrendingVideos = (countryCode = 'GB', page = '', limit = 10) => {
 
   const baseUrl = 'https://youtube.googleapis.com/youtube/v3/videos';
   const parameterisedUrl = `${baseUrl}?part=player&chart=mostPopular&regionCode=${countryCode}&key=${apiKey}&maxResults=${limit}&pageToken=${page}`;
-  return fetch(parameterisedUrl)
-    .then((res) => res.json());
+
+  const trendingVideos = await fetch(parameterisedUrl);
+
+  const trendingVideosJSON = await trendingVideos.json();
+
+  await setPlatformOffset('youtube', trendingVideosJSON.nextPageToken);
+
+  const videos = trendingVideosJSON.items;
+  const videoIds = await videos.map((video) => video.id);
+
+  return videoIds;
 };
 
 /**
@@ -34,6 +44,6 @@ const createEmbeddedYoutube = (video, width = 480, height = 270) => {
 };
 
 module.exports = {
-  getTrendingVideos,
+  getTrendingYoutubeVideos,
   createEmbeddedYoutube,
 };

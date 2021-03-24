@@ -1,4 +1,6 @@
 const fetch = require('node-fetch');
+const { setPlatformOffset } = require('../db/redis_db');
+const { getWOEID } = require('../db/postgres_db');
 
 /**
  * Retrieve the top trending hashtags in the given region
@@ -15,35 +17,6 @@ const getTrendingTopics = (countryWOEID = 1) => {
 
   return fetch(parameterisedUrl, options)
     .then((res) => res.json());
-};
-
-/**
- * Retrieve the WOEID for the given country code
- * @param {string} countryCode - country code to find a WOEID for
- * @returns A promised integer
- */
-const getWOEID = (countryCode = null) => {
-  // if no countryCode is provided we'll provide the worldwide woeid
-  if (countryCode === null) {
-    return 1;
-  }
-
-  const baseUrl = 'https://api.twitter.com/1.1/trends/available.json';
-  const bearerToken = process.env.TWITTER_BEARER_TOKEN;
-  const options = {
-    headers: { Authorization: `Bearer ${bearerToken}` },
-  };
-
-  return fetch(baseUrl, options)
-    .then((res) => res.json())
-    .then((body) => {
-      for (let i = 0; i < body.length; i += 1) {
-        if (body[i].countryCode === countryCode) {
-          return body[i].parentid;
-        }
-      }
-      return 1;
-    });
 };
 
 /**
@@ -74,6 +47,38 @@ const searchTweets = (searchTerm, type = 'popular', limit = 10, maxId = 0, langu
 };
 
 /**
+ * Retrieves popular tweets with the given offset and limit for the given country
+ * @param {number} offset - The amount to offset results by
+ * @param {number} limit - The maximum amount of tweets to retrieve
+ * @param {string} countryCode - The country for which we wish to retrieve popular tweets from
+ * @returns A JSON containing the twets
+ */
+const getTrendingTweets = async (offset = 0, limit = 30, countryCode = 'GB') => {
+  try {
+    const WOEID = await getWOEID(countryCode);
+
+    const trendingTopics = await getTrendingTopics(WOEID);
+
+    const tweets = await searchTweets(trendingTopics[0].trends[0].name, 'popular', limit, offset);
+    const regexpMaxId = /\?max_id=(\d+)&/;
+    const match = regexpMaxId.exec(tweets.search_metadata.next_results);
+
+    await setPlatformOffset('twitter', match[1]);
+
+    const { statuses } = tweets;
+
+    const tweetInfo = await statuses.map((status) => (JSON.stringify({
+      screen_name: status.user.screen_name,
+      id: status.id,
+    })));
+
+    return tweetInfo;
+  } catch (error) {
+    return [];
+  }
+};
+
+/**
  * Retrieve the embeddable HTML for the tweet
  * @param {JSON} tweet - json containing all the information pertaining to a tweet
  * @param {number} maxWidth - The maximum width of the desired embedded tweet
@@ -93,7 +98,7 @@ const createEmbeddedTwitter = (tweet, maxWidth = 300, theme = 'light') => {
 
 module.exports = {
   getTrendingTopics,
-  getWOEID,
   searchTweets,
+  getTrendingTweets,
   createEmbeddedTwitter,
 };

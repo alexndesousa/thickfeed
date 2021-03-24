@@ -1,16 +1,14 @@
 require('dotenv').config({ path: '../../.env' });
 
-const { getHot, createEmbeddedReddit } = require('./reddit_service');
-const { getAccessToken, getNewReleases, createEmbeddedSpotify } = require('./spotify_service');
-const {
-  getTrendingTopics, searchTweets, createEmbeddedTwitter,
-} = require('./twitter_service');
-const { getTrendingVideos, createEmbeddedYoutube } = require('./youtube_service');
-const { getWOEID } = require('../db/postgres_db');
-const { setPlatformOffset } = require('../db/redis_db');
-
+const { getPopularRedditPosts } = require('./reddit_service');
+const { getNewSpotifyReleases } = require('./spotify_service');
+const { getTrendingTweets } = require('./twitter_service');
+const { getTrendingYoutubeVideos } = require('./youtube_service');
+const { getBBCNewsFeed } = require('./bbc_service');
+const { addElementsToFeedList } = require('../db/redis_db');
 /**
- * Retrieves embeddable HTML for all of the popular/trending posts on each of the provided platforms
+ * Retrieves data for all of the popular/trending posts on each of the provided platforms and stores
+ * each platforms data separately within redis
  * @param {Object} options - Contains information on desired platforms and pagination/offsets
  * @param {boolean} options.spotify_enabled - True if we want to receive spotify songs/albums
  * @param {number} options.spotify_offset - Used to retrieve the next page of songs/albums
@@ -20,80 +18,47 @@ const { setPlatformOffset } = require('../db/redis_db');
  * @param {string} options.reddit_offset - Used to retrieve the next page of reddit posts
  * @param {boolean} options.youtube_enabled - True if we want to receive youtube videos
  * @param {string} options.youtube_offset - Used to retrieve the next page of youtube videos
+ * @param {boolean} options.bbc_enabled - True if we want to receive bbc articles
+ * @param {string} options.bbc_offset - Used to retrieve the next page of bbc articles
  * @param {string} options.country_code - Used to retrieve results for the given country
- * @returns An array containing the embeddable HTML for each of the provided platforms
  */
 const generateTrendingFeed = async (options) => {
   // I need to have varying frequencies, e.g., spotify should show up every 50 scrolls for example
-  const body = [];
-  // placeholder for the database
-  const pages = {
-    spotify: 0,
-    twitter: 0,
-    reddit: '',
-    youtube: '',
-  };
+  let spotifySongs = [];
+  let twitterTweets = [];
+  let redditPosts = [];
+  let youtubeVideos = [];
+  let bbcArticles = [];
 
   if (options.spotify_enabled) {
-    const embeddedSongs = getAccessToken()
-      .then((token) => getNewReleases(options.country_code, options.spotify_offset, 2, token))
-      .then((res) => {
-        pages.spotify += parseInt(res.albums.limit, 10);
-
-        setPlatformOffset('spotify', parseInt(res.albums.limit, 10));
-
-        return res.albums.items;
-      })
-      .then((albums) => albums.map((item) => createEmbeddedSpotify(item)));
-    body.push(embeddedSongs);
+    spotifySongs = getNewSpotifyReleases(options.country_code, options.spotify_offset, 10);
   }
   if (options.twitter_enabled) {
-    const embeddedTweets = getWOEID(options.country_code)
-      .then((WOEID) => getTrendingTopics(WOEID))
-      .then((topics) => topics[0].trends[0].name)
-      .then((searchTerm) => searchTweets(searchTerm, 'popular', 30, options.twitter_offset))
-      .then((res) => {
-        // using regular expressions to extract the max_id (used for pagination)
-        const regexpMaxId = /\?max_id=(\d+)&/;
-        const match = regexpMaxId.exec(res.search_metadata.next_results);
-        [pages.twitter] = match;
-
-        setPlatformOffset('twitter', match[1]);
-
-        return res.statuses;
-      })
-      .then((tweets) => tweets.map((item) => createEmbeddedTwitter(item)))
-      .then((embeds) => Promise.all(embeds))
-      .catch();
-    body.push(embeddedTweets);
+    twitterTweets = getTrendingTweets(options.twitter_offset, 30, options.country_code);
   }
   if (options.reddit_enabled) {
-    const embeddedPosts = getHot('popular', options.reddit_offset, 20, options.country_code)
-      .then((res) => {
-        pages.reddit = res.data.after;
-
-        setPlatformOffset('reddit', res.data.after);
-
-        return res.data.children;
-      })
-      .then((posts) => posts.map((item) => createEmbeddedReddit(item)));
-    body.push(embeddedPosts);
+    redditPosts = getPopularRedditPosts('popular', options.reddit_offset, 30);
   }
   if (options.youtube_enabled) {
-    const embeddedVideos = getTrendingVideos(options.country_code, options.youtube_offset, 3)
-      .then((res) => {
-        pages.youtube = res.nextPageToken;
-
-        setPlatformOffset('youtube', res.nextPageToken);
-
-        return res.items;
-      })
-      .then((videos) => videos.map((item) => createEmbeddedYoutube(item)));
-    body.push(embeddedVideos);
+    youtubeVideos = getTrendingYoutubeVideos(options.country_code, options.youtube_offset, 10);
+  }
+  if (options.bbc_enabled) {
+    bbcArticles = getBBCNewsFeed('top');
   }
 
-  const htmls = await Promise.all(body);
-  return htmls.flat();
+  // i could create a new list containing all of these promises and just await that one
+  spotifySongs = await Promise.all(spotifySongs);
+  twitterTweets = await Promise.all(twitterTweets);
+  redditPosts = await Promise.all(redditPosts);
+  youtubeVideos = await Promise.all(youtubeVideos);
+  bbcArticles = await Promise.all(bbcArticles);
+
+  // same goes for the stuff over here
+  await addElementsToFeedList('spotify', spotifySongs);
+  await addElementsToFeedList('twitter', twitterTweets);
+  await addElementsToFeedList('reddit', redditPosts);
+  await addElementsToFeedList('youtube', youtubeVideos);
+  await addElementsToFeedList('bbc', bbcArticles);
 };
 
 // const option = {

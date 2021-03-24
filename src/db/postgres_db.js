@@ -6,7 +6,7 @@ const { Client } = require('pg');
  * Creates a postgres Client with the details present in the .env
  * @returns A postgres Client()
  */
-const newClient = () => {
+const postgresClient = () => {
   const client = new Client({
     user: process.env.PG_USER,
     host: process.env.PG_HOST,
@@ -24,7 +24,7 @@ const newClient = () => {
  * @returns A promised number
  */
 const getWOEID = (countryCode) => {
-  const client = newClient();
+  const client = postgresClient();
   const query = `SELECT woeid FROM thickfeed.woeid WHERE countrycode='${countryCode}'`;
 
   client.connect();
