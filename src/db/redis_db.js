@@ -54,11 +54,12 @@ const getAuthToken = async (platform) => {
  * Stores an array of feed elements (e.g. embeddables) in redis
  * @param {Array} elements - An array of feed elements
  */
-const addElementsToFeedList = async (elements) => {
+const addElementsToFeedList = async (platform, elements) => {
   const client = redisClient();
   const setAsync = promisify(client.rpush).bind(client);
+  const key = `${platform}_feed`;
 
-  await setAsync('feed', elements);
+  await setAsync(key, elements);
   console.log('stored new batch of feed elements');
 
   client.quit();
@@ -70,11 +71,12 @@ const addElementsToFeedList = async (elements) => {
  * @param {number} limit - The amount of elements we want to retrieve
  * @returns An Array
  */
-const getRangeOfFeedElements = async (offset, limit) => {
+const getRangeOfFeedElements = async (platform, offset, limit) => {
   const client = redisClient();
   const getAsync = promisify(client.lrange).bind(client);
+  const key = `${platform}_feed`;
 
-  const elements = await getAsync('feed', offset, offset + limit);
+  const elements = await getAsync(key, offset, offset + limit);
   if (elements === null) {
     console.log('unable to retrieve feed elements from redis');
   } else {
