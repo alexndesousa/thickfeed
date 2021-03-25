@@ -6,7 +6,7 @@ const { setPlatformOffset } = require('../db/redis_db');
  * @param {string} countryCode - The country to receive trending videos for
  * @param {string} page - Used for pagination
  * @param {number} limit - The max number of videos to retrieve
- * @returns A JSON response containing videos information
+ * @returns An Array containing stringified JSON of video information
  */
 const getTrendingYoutubeVideos = async (countryCode = 'GB', page = '', limit = 10) => {
   if (page === null) {
@@ -24,7 +24,7 @@ const getTrendingYoutubeVideos = async (countryCode = 'GB', page = '', limit = 1
   await setPlatformOffset('youtube', trendingVideosJSON.nextPageToken);
 
   const videos = trendingVideosJSON.items;
-  const videoIds = await videos.map((video) => video.id);
+  const videoIds = await videos.map((video) => JSON.stringify({ id: video.id }));
 
   return videoIds;
 };

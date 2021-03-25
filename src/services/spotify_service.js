@@ -42,7 +42,7 @@ const getAccessToken = async () => {
  * @param {number} offset - The amount we want to offset the results by; used for pagination
  * @param {number} limit - The maximum amount of releases we want to retreive
  * @param {string} accessToken - The access token to authenticate the request
- * @returns A JSON containing the song information
+ * @returns An Array containing stringified JSON of song information
  */
 const getNewSpotifyReleases = async (countryCode = 'GB', offset = 0, limit = 10) => {
   if (offset === null) {
@@ -64,7 +64,8 @@ const getNewSpotifyReleases = async (countryCode = 'GB', offset = 0, limit = 10)
   await setPlatformOffset('spotify', parseInt(newReleasesJSON.albums.limit, 10));
 
   const albums = newReleasesJSON.albums.items;
-  const albumIds = await albums.map((album) => album.id);
+  const albumIds = await albums.map((album) => JSON.stringify({ id: album.id }));
+
   return albumIds;
 };
 
