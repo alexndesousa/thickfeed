@@ -1,9 +1,9 @@
 const Parser = require('rss-parser');
 
 /**
- * Retrieves a BBC News RSS feed and converts it into JSON
+ * Retrieves a BBC News RSS feed
  * @param {string} type - The type of new feed that should be retrieved (e.g. science or world news)
- * @returns A JSON
+ * @returns An Array containing stringified JSON of article information
  */
 const getBBCNewsFeed = async (type = 'top') => {
   const feeds = {
@@ -35,8 +35,18 @@ const getBBCNewsFeed = async (type = 'top') => {
   }
 
   const parser = new Parser();
+  console.log('about to await parsing a url');
   const feed = await parser.parseURL(`http://feeds.bbci.co.uk/news${directory}/rss.xml`);
-  return feed;
+
+  const articles = feed.items;
+  const articlesInfo = await articles.map((article) => (JSON.stringify({
+    title: article.title,
+    link: article.link,
+    date: article.pubDate,
+    snippet: article.contentSnippet,
+  })));
+
+  return articlesInfo;
 };
 
 module.exports = {
