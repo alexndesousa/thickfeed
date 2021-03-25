@@ -1,14 +1,14 @@
-require('dotenv').config()
+require('dotenv').config();
+const express = require('express');
+const { fetchAndStoreFeeds, getFeed } = require('./src/controllers/trending_feed_controller');
 
-const express = require('express')
+const app = express();
+const port = 3001;
 
-const app = express()
-const port = 3001
-
-app.get('/hello', (req, res) => {
-  res.send('Hello World!')
-})
+app.get('/test', getFeed);
 
 app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`)
-})
+  console.log(`thickfeed listening at http://localhost:${port}`);
+});
+
+fetchAndStoreFeeds();
