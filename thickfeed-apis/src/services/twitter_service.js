@@ -51,7 +51,7 @@ const searchTweets = (searchTerm, type = 'popular', limit = 10, maxId = 0, langu
  * @param {number} offset - The amount to offset results by
  * @param {number} limit - The maximum amount of tweets to retrieve
  * @param {string} countryCode - The country for which we wish to retrieve popular tweets from
- * @returns A JSON containing the twets
+ * @returns An Array containing stringified JSON of tweet information
  */
 const getTrendingTweets = async (offset = 0, limit = 30, countryCode = 'GB') => {
   try {

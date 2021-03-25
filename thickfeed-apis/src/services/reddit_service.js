@@ -7,7 +7,7 @@ const { setPlatformOffset } = require('../db/redis_db');
  * @param {string} after - Used for retrieving the next page
  * @param {number} limit - The maximum number of posts to retrieve
  * @param {string} countryCode - The country to retrieve popular posts from
- * @returns A JSON containing the posts
+ * @returns An Array containing stringified JSON of post information
  */
 const getPopularRedditPosts = async (subreddit = 'popular', after = '', limit = 10, countryCode = 'GLOBAL') => {
   if (after === null) {
