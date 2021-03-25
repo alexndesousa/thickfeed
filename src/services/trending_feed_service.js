@@ -46,14 +46,11 @@ const generateTrendingFeed = async (options) => {
     bbcArticles = getBBCNewsFeed('top');
   }
 
-  // i could create a new list containing all of these promises and just await that one
-  spotifySongs = await Promise.all(spotifySongs);
-  twitterTweets = await Promise.all(twitterTweets);
-  redditPosts = await Promise.all(redditPosts);
-  youtubeVideos = await Promise.all(youtubeVideos);
-  bbcArticles = await Promise.all(bbcArticles);
+  // await all of the promised platform feeds
+  [spotifySongs, twitterTweets, redditPosts, youtubeVideos, bbcArticles] = await
+  Promise.all([spotifySongs, twitterTweets, redditPosts, youtubeVideos, bbcArticles]);
 
-  // same goes for the stuff over here
+  // store the feeds in redis
   await addElementsToFeedList('spotify', spotifySongs);
   await addElementsToFeedList('twitter', twitterTweets);
   await addElementsToFeedList('reddit', redditPosts);
