@@ -55,6 +55,10 @@ const getAuthToken = async (platform) => {
  * @param {Array} elements - An array of feed elements
  */
 const addElementsToFeedList = async (platform, elements) => {
+  // if no elements are provided we do nothing
+  if (Object.keys(elements).length === 0) {
+    return;
+  }
   const client = redisClient();
   const setAsync = promisify(client.rpush).bind(client);
   const key = `${platform}_feed`;
