@@ -33,7 +33,7 @@ const searchTweets = (searchTerm, type = 'popular', limit = 10, maxId = 0, langu
   const encodedSearchTerm = encodeURIComponent(searchTerm);
 
   const baseUrl = 'https://api.twitter.com/1.1/search/tweets.json';
-  const parameterisedUrl = `${baseUrl}?max_id=${maxId}&q=${encodedSearchTerm}&result_type=${type}&count=${limit}&lang=${language}`;
+  const parameterisedUrl = `${baseUrl}?max_id=${maxId}&q=${encodedSearchTerm}&result_type=${type}&count=${limit}&lang=${language}&tweet_mode=extended`;
   const bearerToken = process.env.TWITTER_BEARER_TOKEN;
   const options = {
     headers: {
@@ -68,8 +68,11 @@ const getTrendingTweets = async (offset = 0, limit = 30, countryCode = 'GB') => 
     const { statuses } = tweets;
 
     const tweetInfo = await statuses.map((status) => (JSON.stringify({
-      screen_name: status.user.screen_name,
-      id: status.id,
+      text: status.retweeted_status.full_text || status.full_text,
+      url: status.entities.urls.expanded_url,
+      display_name: status.user.screen_name,
+      username: status.user.name,
+      created: status.created_at,
     })));
 
     return tweetInfo;
@@ -78,27 +81,8 @@ const getTrendingTweets = async (offset = 0, limit = 30, countryCode = 'GB') => 
   }
 };
 
-/**
- * Retrieve the embeddable HTML for the tweet
- * @param {JSON} tweet - json containing all the information pertaining to a tweet
- * @param {number} maxWidth - The maximum width of the desired embedded tweet
- * @param {string} theme - The theme of the tweet; can either be 'light' or 'dark'
- * @returns A promised string containing HTML
- */
-const createEmbeddedTwitter = (tweet, maxWidth = 300, theme = 'light') => {
-  const sourceTweet = encodeURIComponent(`https://twitter.com/${tweet.user.screen_name}/status/${tweet.id_str}`);
-
-  const baseUrl = 'https://publish.twitter.com/oembed';
-  const parameterisedUrl = `${baseUrl}?url=${sourceTweet}&maxwidth=${maxWidth}&theme=${theme}`;
-
-  return fetch(parameterisedUrl)
-    .then((res) => res.json())
-    .then((body) => body.html);
-};
-
 module.exports = {
   getTrendingTopics,
   searchTweets,
   getTrendingTweets,
-  createEmbeddedTwitter,
 };

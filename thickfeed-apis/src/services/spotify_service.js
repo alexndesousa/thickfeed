@@ -69,22 +69,7 @@ const getNewSpotifyReleases = async (countryCode = 'GB', offset = 0, limit = 10)
   return albumIds;
 };
 
-/**
- * Creates an embeddable iFrame for a given album
- * @param {JSON} album - Json containing all the album information
- * @param {number} width - The width of the embedded album
- * @param {number} height - The height of the embedded album
- * @returns A string containing the embeddable html
- */
-const createEmbeddedSpotify = (album, width = 300, height = 380) => {
-  const baseUrl = 'https://open.spotify.com/embed/album/';
-  const embedLink = `${baseUrl}${album.id}`;
-  const embeddedAlbum = `<iframe src="${embedLink}" width="${width}" height="${height}" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>`;
-  return embeddedAlbum;
-};
-
 module.exports = {
   getAccessToken,
   getNewSpotifyReleases,
-  createEmbeddedSpotify,
 };
