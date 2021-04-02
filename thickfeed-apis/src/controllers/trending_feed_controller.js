@@ -54,7 +54,7 @@ const getFeed = async (req, res) => {
   }
 
   const response = {
-    response: feed,
+    body: feed,
   };
 
   res.send(response);
@@ -91,7 +91,7 @@ const fetchAndStoreFeeds = async () => {
     await generateTrendingFeed(options);
 
     // delay for retrieving next batch of feed elements
-    await new Promise((resolve) => setTimeout(resolve, 30000));
+    await new Promise((resolve) => setTimeout(resolve, 10000));
   }
 };
 

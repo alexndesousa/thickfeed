@@ -31,5 +31,4 @@ const getTrendingYoutubeVideos = async (countryCode = 'GB', page = '', limit = 1
 
 module.exports = {
   getTrendingYoutubeVideos,
-  createEmbeddedYoutube,
 };
