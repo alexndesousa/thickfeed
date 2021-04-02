@@ -1,20 +1,17 @@
 import * as React from 'react';
 
-interface SpotifyData {
+export interface SpotifyData {
   id: string,
   width: number,
   height: number,
 }
 
-const createEmbeddedSpotify = (props: SpotifyData): JSX.Element => {
+export const SpotifyCard = ({ id, width, height }: SpotifyData): JSX.Element => {
   const baseUrl = 'https://open.spotify.com/embed/album/';
-  const embedLink = `${baseUrl}${props.id}`;
-
+  const embedLink = `${baseUrl}${id}`;
   return (
     <div>
-      <iframe src={embedLink} title="Spotify Player" width={props.width} height={props.height} allow="encrypted-media" />
+      <iframe src={embedLink} title="Spotify Player" width={width} height={height} allow="encrypted-media" />
     </div>
   );
 };
-
-export default createEmbeddedSpotify;

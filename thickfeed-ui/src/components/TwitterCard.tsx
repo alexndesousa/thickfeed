@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-interface TwitterData {
+export interface TwitterData {
   text: string,
   url: string,
   displayName: string,
@@ -10,23 +10,23 @@ interface TwitterData {
   height?: number
 }
 
-const createEmbeddedTwitter = (props: TwitterData): JSX.Element => {
-  const fullName = `${props.displayName} (@${props.username})`;
+export const TwitterCard = ({
+  displayName, username, width, text, url, created,
+}: TwitterData): JSX.Element => {
+  const fullName = `${displayName} (@${username})`;
 
   return (
     <div>
-      <blockquote className="twitter-tweet" data-width={props.width}>
+      <blockquote className="twitter-tweet" data-width={width}>
         <p lang="en" dir="ltr">
-          {props.text}
+          {text}
         </p>
         {fullName}
-        <a href={props.url}>
-          {props.created}
+        <a href={url}>
+          {created}
         </a>
       </blockquote>
       <script async src="https://platform.twitter.com/widgets.js" charSet="utf-8" />
     </div>
   );
 };
-
-export default createEmbeddedTwitter;
