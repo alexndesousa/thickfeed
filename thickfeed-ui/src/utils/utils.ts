@@ -1,12 +1,13 @@
 /**
  * Shuffles an array using the Fisher-Yates algorithm
- * @param {Array} array - The array to be shuffled
- * @returns An array
+ * @param {Array<string>} array - The array to be shuffled
+ * @returns An array of strings
  */
-const shuffle = (array) => {
-  const arr = array;
-  let currentIndex = arr.length; let temporaryValue; let
-    randomIndex;
+const shuffle = (array: Array<JSX.Element>): Array<JSX.Element> => {
+  const arr: Array<JSX.Element> = array;
+  let currentIndex = arr.length;
+  let temporaryValue;
+  let randomIndex;
 
   while (currentIndex !== 0) {
     randomIndex = Math.floor(Math.random() * currentIndex);
@@ -21,6 +22,4 @@ const shuffle = (array) => {
   return arr;
 };
 
-module.exports = {
-  shuffle,
-};
+export default shuffle;
