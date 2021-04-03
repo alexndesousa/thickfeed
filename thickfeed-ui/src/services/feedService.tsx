@@ -3,7 +3,7 @@ import { RedditData, RedditCard } from '../components/RedditCard';
 import { SpotifyData, SpotifyCard } from '../components/SpotifyCard';
 import { TwitterData, TwitterCard } from '../components/TwitterCard';
 import { YoutubeData, YoutubeCard } from '../components/YoutubeCard';
-import shuffle from '../utils/utils';
+import { shuffle } from '../utils/utils';
 
 interface FeedOptions {
   offset: number,
@@ -67,9 +67,16 @@ const createEmbeddedFeedElements = (
   const redditCards = props.body.reddit.map(
     (element) => (
       <RedditCard
+        selftext={element.selftext}
+        author={element.author}
+        createdUtc={element.createdUtc}
+        ups={element.ups}
+        numComments={element.numComments}
+        urlOverridenByDest={element.urlOverridenByDest}
         permalink={element.permalink}
         title={element.title}
         subredditNamePrefixed={element.subredditNamePrefixed}
+        postHint={element.postHint}
         width={cardWidth}
       />
     ),

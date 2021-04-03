@@ -25,9 +25,16 @@ const getPopularRedditPosts = async (subreddit = 'popular', after = '', limit = 
   const posts = popularPostsJSON.data.children;
 
   const postsInfo = await posts.map((post) => (JSON.stringify({
+    title: post.data.title,
+    selftext: post.data.selftext,
+    subredditNamePrefixed: post.data.subreddit_name_prefixed,
+    author: post.data.author,
+    createdUtc: post.data.created_utc,
+    ups: post.data.ups,
+    numComments: post.data.num_comments,
+    urlOverridenByDest: post.data.url_overridden_by_dest || '',
+    postHint: post.data.post_hint || '',
     permalink: post.data.permalink,
-    title: post.title,
-    subreddit: post.data.subreddit_name_prefixed,
   })));
 
   return postsInfo;
