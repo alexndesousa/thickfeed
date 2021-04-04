@@ -45,6 +45,7 @@ const createEmbeddedFeedElements = (
     (element) => (
       <SpotifyCard
         id={element.id}
+        imageUrl={element.imageUrl}
         width={cardWidth}
         height={cardHeight}
       />

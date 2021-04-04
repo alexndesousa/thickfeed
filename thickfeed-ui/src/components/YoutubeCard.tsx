@@ -1,25 +1,31 @@
 import * as React from 'react';
+import LazyLoad from 'react-lazyload';
+import '../styles/cardsStyle.css';
+import YoutubeLoader from './YoutubeLoader';
 
 export interface YoutubeData {
   id: string,
   width: number,
-  height: number
+  height?: number
 }
 
-export const YoutubeCard = ({ id, width, height }: YoutubeData): JSX.Element => {
-  const baseUrl = `https://www.youtube.com/embed/${id}?modestbranding=1`;
+export const YoutubeCard = ({ id }: YoutubeData): JSX.Element => {
+  const baseUrl = `https://www.youtube-nocookie.com/embed/${id}?modestbranding=1`;
 
   return (
-    <div>
-      <iframe
-        id="ytplayer"
-        title="Youtube Video Player"
-        width={width}
-        src={baseUrl}
-        height={height}
-        frameBorder="0"
-        allowFullScreen
-      />
+    <div className="card-container-youtube">
+      <LazyLoad placeholder={<YoutubeLoader />}>
+        <iframe
+          className="responsive-card"
+          id="ytplayer"
+          title="Youtube Video Player"
+          loading="lazy"
+          src={baseUrl}
+          frameBorder="0"
+          allowFullScreen
+        />
+      </LazyLoad>
     </div>
+
   );
 };

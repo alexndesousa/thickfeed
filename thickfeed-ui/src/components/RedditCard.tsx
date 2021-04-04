@@ -12,6 +12,7 @@ import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link';
 import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import ReactMarkdown from 'react-markdown';
+import LazyLoad from 'react-lazyload';
 import redditLogo from '../assets/Reddit_Mark_OnWhite.png';
 import { formatUTC } from '../utils/utils';
 
@@ -139,27 +140,29 @@ export const RedditCard = ({
   const postTitle = title;
   return (
     <Card className="card-container-reddit">
-      <CardActionArea href={postLink} target="_blank">
-        <CardHeader
-          title={postTitle}
-          style={{ marginBottom: '-0.55em' }}
-        />
-        <CardContent>
-          <RedditCardBody
-            urlOverridenByDest={urlOverridenByDest}
-            selftext={selftext}
-            postHint={postHint}
+      <LazyLoad>
+        <CardActionArea href={postLink} target="_blank">
+          <CardHeader
+            title={postTitle}
+            style={{ marginBottom: '-0.55em' }}
           />
-          <RedditCardFooter
-            author={author}
-            subredditNamePrefixed={subredditNamePrefixed}
-            ups={ups}
-            numComments={numComments}
-            createdUtc={createdUtc}
-            baseUrl={baseUrl}
-          />
-        </CardContent>
-      </CardActionArea>
+          <CardContent>
+            <RedditCardBody
+              urlOverridenByDest={urlOverridenByDest}
+              selftext={selftext}
+              postHint={postHint}
+            />
+            <RedditCardFooter
+              author={author}
+              subredditNamePrefixed={subredditNamePrefixed}
+              ups={ups}
+              numComments={numComments}
+              createdUtc={createdUtc}
+              baseUrl={baseUrl}
+            />
+          </CardContent>
+        </CardActionArea>
+      </LazyLoad>
     </Card>
   );
 };

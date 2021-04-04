@@ -64,7 +64,10 @@ const getNewSpotifyReleases = async (countryCode = 'GB', offset = 0, limit = 10)
   await setPlatformOffset('spotify', parseInt(newReleasesJSON.albums.limit, 10));
 
   const albums = newReleasesJSON.albums.items;
-  const albumIds = await albums.map((album) => JSON.stringify({ id: album.id }));
+  const albumIds = await albums.map((album) => JSON.stringify({
+    id: album.id,
+    imageUrl: album.images[0].url || '',
+  }));
 
   return albumIds;
 };
