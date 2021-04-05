@@ -13,10 +13,10 @@
   width: 100%;
   max-width: 596px;
   margin-top: 20px;
-  padding-bottom: -100px !important;
 }
 
 .card-container-reddit {
+  position: relative;
   width: 100%;
   margin-top: 20px;
   max-width: 596px;

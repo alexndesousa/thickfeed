@@ -23,6 +23,7 @@ export const YoutubeCard = ({ id }: YoutubeData): JSX.Element => {
           src={baseUrl}
           frameBorder="0"
           allowFullScreen
+          style={{ borderRadius: 10 }}
         />
       </LazyLoad>
     </div>
