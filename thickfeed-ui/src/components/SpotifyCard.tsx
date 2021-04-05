@@ -4,6 +4,7 @@ import Card from '@material-ui/core/Card';
 import { CardMedia } from '@material-ui/core';
 import LazyLoad from 'react-lazyload';
 import SpotifyLoader from './SpotifyLoader';
+import spotifyAlbumPlaceholder from '../assets/spotifyalbumplaceholder.svg';
 
 export interface SpotifyData {
   id: string,
@@ -20,8 +21,9 @@ export const SpotifyCard = ({
 
   return (
     <Card className="card-container-spotify">
-      <LazyLoad placeholder={<div className="card-container-spotify" />}>
+      <LazyLoad placeholder={spotifyAlbumPlaceholder}>
         <CardMedia
+          alt="album artwork"
           src={imageUrl}
           component="img"
           style={{ filter: 'brightness(40%)' }}
