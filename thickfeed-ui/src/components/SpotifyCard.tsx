@@ -21,7 +21,7 @@ export const SpotifyCard = ({
 
   return (
     <Card className="card-container-spotify">
-      <LazyLoad placeholder={spotifyAlbumPlaceholder}>
+      <LazyLoad placeholder={<img src={spotifyAlbumPlaceholder} alt="placeholder" />}>
         <CardMedia
           alt="album artwork"
           src={imageUrl}
