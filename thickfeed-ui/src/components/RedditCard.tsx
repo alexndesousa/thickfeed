@@ -11,6 +11,7 @@ import Link from '@material-ui/core/Link';
 import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import ReactMarkdown from 'react-markdown';
 import LazyLoad from 'react-lazyload';
+import gfm from 'remark-gfm';
 import redditLogo from '../assets/Reddit_Mark_OnWhite.png';
 import { formatUTC } from '../utils/utils';
 
@@ -119,7 +120,7 @@ const RedditCardBody = ({
       ? (
         <CardContent>
           <Typography variant="body1" style={{ fontSize: 'calc(10px + 1.15vmin)' }}>
-            <ReactMarkdown className="markdown-body">
+            <ReactMarkdown plugins={[gfm]} className="markdown-body">
               {selftext}
             </ReactMarkdown>
           </Typography>
