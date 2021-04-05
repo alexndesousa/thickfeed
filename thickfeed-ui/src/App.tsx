@@ -1,6 +1,5 @@
 import * as React from 'react';
-import useScript from './hooks/useScript';
-import logo from './logo.svg';
+import thickfeedLogo from './assets/thickfeed cropped.jpg';
 import './App.css';
 import { getFeed } from './services/feedService';
 
@@ -20,14 +19,10 @@ const App = (): JSX.Element => {
     getFeed(feedOptions, 500, 500)
       .then((newFeed) => setFeed(newFeed));
   }, []);
-  // React.useEffect(() => {
-  //   console.log(feed);
-  // }, [feed]);
-  useScript('https://embed.redditmedia.com/widgets/platform.js');
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
+        <img src={thickfeedLogo} className="App-logo" alt="logo" />
         {feed}
         <a
           className="App-link"
