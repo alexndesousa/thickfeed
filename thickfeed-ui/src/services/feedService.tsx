@@ -79,6 +79,8 @@ const createEmbeddedFeedElements = (
         subredditNamePrefixed={element.subredditNamePrefixed}
         postHint={element.postHint}
         width={cardWidth}
+        imageWidth={element.imageWidth}
+        imageHeight={element.imageHeight}
       />
     ),
   );

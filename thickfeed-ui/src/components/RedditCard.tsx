@@ -4,9 +4,7 @@ import '../styles/cardsStyle.css';
 import '../styles/githubMarkdown.css';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
-import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
-// import CardMedia from '@material-ui/core/CardMedia';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link';
@@ -27,6 +25,8 @@ export interface RedditData {
   urlOverridenByDest: string,
   permalink: string,
   postHint: string,
+  imageWidth: number,
+  imageHeight: number,
   width: number,
   height?: number,
 }
@@ -72,12 +72,12 @@ const RedditCardFooter = ({
       </Grid>
       <Grid item direction="column" style={{ marginBottom: '-0.18em' }}>
         <Grid item style={{ marginTop: '-0.60em', marginBottom: '-0.60em' }}>
-          <Typography display="inline" variant="body2">
+          <Typography display="inline" variant="body2" style={{ fontSize: 'calc(8px + 1vmin)' }}>
             <Link color="textPrimary" href={subredditLink} target="_blank" rel="noreferrer">
               {subredditNamePrefixed}
             </Link>
           </Typography>
-          <Typography display="inline" variant="body2" color="textSecondary">
+          <Typography display="inline" variant="body2" color="textSecondary" style={{ fontSize: 'calc(8px + 1vmin)' }}>
             {separator}
             <Link color="textSecondary" href={`${baseUrl}/u/${author}`} target="_blank" rel="noreferrer">
               {author}
@@ -88,7 +88,7 @@ const RedditCardFooter = ({
         </Grid>
         <Grid item style={{ marginTop: '-0.18em', marginBottom: '-0.55em' }}>
           <ThemeProvider theme={theme}>
-            <Typography variant="caption" color="textSecondary">
+            <Typography variant="caption" color="textSecondary" style={{ fontSize: 'calc(6px + 1vmin)' }}>
               {points}
               {separator}
               {comments}
@@ -106,63 +106,85 @@ interface RedditBodyData {
   urlOverridenByDest: string,
   selftext: string,
   postHint: string,
+  imageWidth: number,
+  imageHeight: number,
 }
 
-const RedditCardBody = ({ urlOverridenByDest, selftext, postHint }: RedditBodyData) => (
+const RedditCardBody = ({
+  urlOverridenByDest, selftext, postHint, imageWidth, imageHeight,
+}: RedditBodyData) => (
   <div>
+
     {urlOverridenByDest === ''
       ? (
-        <Typography>
-          <ReactMarkdown className="markdown-body">
-            {selftext}
-          </ReactMarkdown>
-        </Typography>
+        <CardContent>
+          <Typography variant="body1" style={{ fontSize: 'calc(10px + 1.15vmin)' }}>
+            <ReactMarkdown className="markdown-body">
+              {selftext}
+            </ReactMarkdown>
+          </Typography>
+        </CardContent>
       )
       : (postHint === 'image'
-        ? <img src={urlOverridenByDest} alt="embedded" style={{ objectFit: 'contain', width: '100%' }} />
+
+        ? (
+          <LazyLoad>
+            <img
+              src={urlOverridenByDest}
+              alt="embedded"
+              width={imageWidth}
+              height={imageHeight}
+              style={{ objectFit: 'contain', width: '100%' }}
+            />
+          </LazyLoad>
+        )
         : (
-          <Typography variant="body1">
-            <Link href={urlOverridenByDest} target="_blank" rel="noreferrer">
-              {urlOverridenByDest}
-            </Link>
-          </Typography>
+          <CardContent>
+            <Typography variant="body1" style={{ fontSize: 'calc(10px + 1.15vmin)' }}>
+              <Link href={urlOverridenByDest} target="_blank" rel="noreferrer">
+                {urlOverridenByDest}
+              </Link>
+            </Typography>
+          </CardContent>
         )
       )}
+
   </div>
 );
 
 export const RedditCard = ({
   permalink, title, subredditNamePrefixed, selftext, author, createdUtc, ups, numComments,
-  urlOverridenByDest, postHint,
+  urlOverridenByDest, postHint, imageWidth, imageHeight,
 }: RedditData): JSX.Element => {
   const baseUrl = 'https://www.reddit.com';
   const postLink = `${baseUrl}${permalink}`;
   const postTitle = title;
   return (
     <Card className="card-container-reddit">
-      <LazyLoad>
-        <CardActionArea href={postLink} target="_blank">
-          <CardHeader
-            title={postTitle}
-            style={{ marginBottom: '-0.55em' }}
+      <CardActionArea href={postLink} target="_blank">
+        <CardContent style={{ marginBottom: '-0.55em' }}>
+          <Typography variant="h5" style={{ fontSize: 'calc(14px + 1.4vmin)' }}>
+            {postTitle}
+          </Typography>
+        </CardContent>
+        <CardContent>
+          <RedditCardBody
+            urlOverridenByDest={urlOverridenByDest}
+            selftext={selftext}
+            postHint={postHint}
+            imageWidth={imageWidth}
+            imageHeight={imageHeight}
           />
-          <CardContent>
-            <RedditCardBody
-              urlOverridenByDest={urlOverridenByDest}
-              selftext={selftext}
-              postHint={postHint}
-            />
-            <RedditCardFooter
-              author={author}
-              subredditNamePrefixed={subredditNamePrefixed}
-              ups={ups}
-              numComments={numComments}
-              createdUtc={createdUtc}
-              baseUrl={baseUrl}
-            />
-          </CardContent>
-        </CardActionArea>
-      </LazyLoad>
+          <RedditCardFooter
+            author={author}
+            subredditNamePrefixed={subredditNamePrefixed}
+            ups={ups}
+            numComments={numComments}
+            createdUtc={createdUtc}
+            baseUrl={baseUrl}
+          />
+        </CardContent>
+      </CardActionArea>
     </Card>
   );
 };
