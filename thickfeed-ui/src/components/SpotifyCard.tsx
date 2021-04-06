@@ -21,7 +21,7 @@ export const SpotifyCard = ({
 
   return (
     <Card className="card-container-spotify">
-      <LazyLoad placeholder={<img src={spotifyAlbumPlaceholder} alt="placeholder" />}>
+      <LazyLoad placeholder={<img src={spotifyAlbumPlaceholder} alt="placeholder" />} offset={600}>
         <CardMedia
           alt="album artwork"
           src={imageUrl}
@@ -29,7 +29,7 @@ export const SpotifyCard = ({
           style={{ filter: 'brightness(40%)' }}
         />
       </LazyLoad>
-      <LazyLoad placeholder={<SpotifyLoader />}>
+      <LazyLoad placeholder={<SpotifyLoader />} offset={600}>
         <iframe
           className="spotify-player"
           src={embedLink}
