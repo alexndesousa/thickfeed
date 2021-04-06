@@ -24,11 +24,11 @@ const MenuBar = ({ setFeedOptions }: FeedOptionsData): JSX.Element => {
 
   React.useEffect(() => {
     const options = {
-      reddit: reddit.length > 1,
-      youtube: youtube.length > 1,
-      twitter: twitter.length > 1,
-      spotify: spotify.length > 1,
-      bbc: bbc.length > 1,
+      reddit: reddit.length >= 1,
+      youtube: youtube.length >= 1,
+      twitter: twitter.length >= 1,
+      spotify: spotify.length >= 1,
+      bbc: bbc.length >= 1,
     };
     setFeedOptions(options);
   }, [spotify, twitter, reddit, youtube, bbc]);

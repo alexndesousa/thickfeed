@@ -8,22 +8,22 @@ const App = (): JSX.Element => {
   const [feed, setFeed] = React.useState<Array<JSX.Element>>([]);
   const [offset] = React.useState(0);
   const [feedOptions, setFeedOptions] = React.useState({
-    spotify: true,
+    spotify: false,
     // spotifyCategories?: [],
-    reddit: true,
+    reddit: false,
     // redditCategories?: [],
-    twitter: true,
+    twitter: false,
     // twitterCategories?: [],
-    youtube: true,
+    youtube: false,
     // youtubeCategories?: []
-    bbc: true,
+    bbc: false,
     // bbcCategories?: []
   });
 
   React.useEffect(() => {
     getFeed({ ...{ offset, limit: 40 }, ...feedOptions }, 500, 500)
       .then((newFeed) => setFeed(newFeed));
-  }, []);
+  }, [feedOptions]);
 
   return (
     <div className="App">
