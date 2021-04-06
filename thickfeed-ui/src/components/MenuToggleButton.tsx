@@ -14,7 +14,6 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
     display: 'flex',
   },
   paper: {
-    zIndex: 2000,
     marginRight: theme.spacing(2),
   },
   button: {
@@ -28,6 +27,7 @@ const ChildToggleButtons = (childButtonNames: Array<string>): Array<JSX.Element>
   const mappedButtons = childButtonNames.map((text) => (
     <ToggleButton
       value={text}
+      key={text}
       aria-label={text}
       style={{
         borderRadius: 30, marginLeft: '5px', borderColor: 'lightgray', border: '1px solid lightgray',

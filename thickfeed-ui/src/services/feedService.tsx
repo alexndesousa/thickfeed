@@ -41,10 +41,11 @@ const createEmbeddedFeedElements = (
 ): Array<JSX.Element> => {
   let feed: Array<JSX.Element> = [];
 
-  const spotifyCards = props.body.spotify.map(
+  const spotifyCards = props.body.spotify?.map(
     (element) => (
       <SpotifyCard
         id={element.id}
+        key={element.id}
         imageUrl={element.imageUrl}
         width={cardWidth}
         height={cardHeight}
@@ -52,7 +53,7 @@ const createEmbeddedFeedElements = (
     ),
   );
 
-  const twitterCards = props.body.twitter.map(
+  const twitterCards = props.body.twitter?.map(
     (element) => (
       <TwitterCard
         displayName={element.displayName}
@@ -61,11 +62,12 @@ const createEmbeddedFeedElements = (
         text={element.text}
         url={element.url}
         created={element.created}
+        key={element.url}
       />
     ),
   );
 
-  const redditCards = props.body.reddit.map(
+  const redditCards = props.body.reddit?.map(
     (element) => (
       <RedditCard
         selftext={element.selftext}
@@ -79,16 +81,18 @@ const createEmbeddedFeedElements = (
         subredditNamePrefixed={element.subredditNamePrefixed}
         postHint={element.postHint}
         width={cardWidth}
+        key={element.permalink}
         imageWidth={element.imageWidth}
         imageHeight={element.imageHeight}
       />
     ),
   );
 
-  const youtubeCards = props.body.youtube.map(
+  const youtubeCards = props.body.youtube?.map(
     (element) => (
       <YoutubeCard
         id={element.id}
+        key={element.id}
         width={cardWidth}
         height={cardHeight}
       />
