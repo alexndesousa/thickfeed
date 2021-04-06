@@ -22,31 +22,31 @@ const getFeed = async (req, res) => {
 
   // i should probably move the bodies of the if statements to a seperate function since they're all
   // pretty much identical
-  if (req.query.spotify) {
+  if (req.query.spotify && req.query.spotify === 'true') {
     const spotifyFeedElements = await getRangeOfFeedElements('spotify', platformOffset, platformLimit);
     const spotifyFeedElementsJSON = spotifyFeedElements.map((element) => JSON.parse(element));
 
     feed.spotify = spotifyFeedElementsJSON;
   }
-  if (req.query.twitter) {
+  if (req.query.twitter && req.query.twitter === 'true') {
     const twitterFeedElements = await getRangeOfFeedElements('twitter', platformOffset, platformLimit);
     const twitterFeedElementsJSON = twitterFeedElements.map((element) => JSON.parse(element));
 
     feed.twitter = twitterFeedElementsJSON;
   }
-  if (req.query.reddit) {
+  if (req.query.reddit && req.query.reddit === 'true') {
     const redditFeedElements = await getRangeOfFeedElements('reddit', platformOffset, platformLimit);
     const redditFeedElementsJSON = await redditFeedElements.map((element) => JSON.parse(element));
 
     feed.reddit = redditFeedElementsJSON;
   }
-  if (req.query.youtube) {
+  if (req.query.youtube && req.query.youtube === 'true') {
     const youtubeFeedElements = await getRangeOfFeedElements('youtube', platformOffset, platformLimit);
     const youtubeFeedElementsJSON = await youtubeFeedElements.map((element) => JSON.parse(element));
 
     feed.youtube = youtubeFeedElementsJSON;
   }
-  if (req.query.bbc) {
+  if (req.query.bbc && req.query.bbc === 'true') {
     const bbcFeedElements = await getRangeOfFeedElements('bbc', platformOffset, platformLimit);
     const bbcFeedElementsJSON = await bbcFeedElements.map((element) => JSON.parse(element));
 
@@ -91,7 +91,7 @@ const fetchAndStoreFeeds = async () => {
     await generateTrendingFeed(options);
 
     // delay for retrieving next batch of feed elements
-    await new Promise((resolve) => setTimeout(resolve, 10000));
+    await new Promise((resolve) => setTimeout(resolve, 1000000));
   }
 };
 
