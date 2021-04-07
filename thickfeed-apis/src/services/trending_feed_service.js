@@ -6,6 +6,7 @@ const { getTrendingTweets } = require('./twitter_service');
 const { getTrendingYoutubeVideos } = require('./youtube_service');
 const { getBBCNewsFeed } = require('./bbc_service');
 const { addElementsToFeedList } = require('../db/redis_db');
+
 /**
  * Retrieves data for all of the popular/trending posts on each of the provided platforms and stores
  * each platforms data separately within redis
