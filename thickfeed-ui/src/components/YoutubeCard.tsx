@@ -14,7 +14,7 @@ export const YoutubeCard = ({ id }: YoutubeData): JSX.Element => {
 
   return (
     <div className="card-container-youtube">
-      <LazyLoad placeholder={<YoutubeLoader />} offset={600}>
+      <LazyLoad placeholder={<YoutubeLoader />} offset={800} once>
         <iframe
           className="responsive-card"
           id="ytplayer"

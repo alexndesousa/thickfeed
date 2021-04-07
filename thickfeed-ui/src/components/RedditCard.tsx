@@ -129,7 +129,7 @@ const RedditCardBody = ({
       : (postHint === 'image'
 
         ? (
-          <LazyLoad offset={600}>
+          <LazyLoad offset={600} once>
             <img
               src={urlOverridenByDest}
               alt="embedded"

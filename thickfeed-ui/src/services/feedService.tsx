@@ -56,13 +56,9 @@ const createEmbeddedFeedElements = (
   const twitterCards = props.body.twitter?.map(
     (element) => (
       <TwitterCard
-        displayName={element.displayName}
-        username={element.username}
+        id={element.id}
+        imageWidth={element.imageWidth}
         width={cardWidth}
-        text={element.text}
-        url={element.url}
-        created={element.created}
-        key={element.url}
       />
     ),
   );
