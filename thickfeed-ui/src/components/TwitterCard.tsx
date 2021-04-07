@@ -1,32 +1,41 @@
 import * as React from 'react';
+import LazyLoad from 'react-lazyload';
+import { Tweet } from 'react-twitter-widgets';
+import '../styles/cardsStyle.css';
+import { TwitterLoader, TwitterLoaderMedia } from './TwitterLoader';
 
 export interface TwitterData {
-  text: string,
-  url: string,
-  displayName: string,
-  username: string,
-  created: string,
+  id: string,
+  imageWidth: number,
+  imageHeight?: number,
   width: number,
   height?: number
 }
 
-export const TwitterCard = ({
-  displayName, username, width, text, url, created,
-}: TwitterData): JSX.Element => {
-  const fullName = `${displayName} (@${username})`;
+export const TwitterCard = ({ id, imageWidth }: TwitterData): JSX.Element => {
+  const [placeholder, setPlaceholder] = React.useState(true);
 
+  const togglePlaceholder = () => {
+    setPlaceholder(false);
+  };
   return (
-    <div>
-      <blockquote className="twitter-tweet" data-width={width}>
-        <p lang="en" dir="ltr">
-          {text}
-        </p>
-        {fullName}
-        <a href={url}>
-          {created}
-        </a>
-      </blockquote>
-      <script async src="https://platform.twitter.com/widgets.js" charSet="utf-8" />
+
+    <div className="card-container-twitter">
+
+      <LazyLoad
+        placeholder={imageWidth === 0 ? <TwitterLoader /> : <TwitterLoaderMedia />}
+        offset={600}
+        once
+      >
+        {/* eslint-disable-next-line no-nested-ternary */}
+        {placeholder
+          ? (imageWidth === 0
+            ? <TwitterLoader />
+            : <TwitterLoaderMedia />
+          )
+          : null }
+        <Tweet tweetId={id} onLoad={togglePlaceholder} />
+      </LazyLoad>
     </div>
   );
 };
