@@ -16,11 +16,11 @@ interface FeedOptionsData {
 }
 
 const MenuBar = ({ setFeedOptions }: FeedOptionsData): JSX.Element => {
-  const [reddit, setReddit] = React.useState([]);
-  const [youtube, setYoutube] = React.useState([]);
-  const [twitter, setTwitter] = React.useState([]);
-  const [spotify, setSpotify] = React.useState([]);
-  const [bbc, setBbc] = React.useState([]);
+  const [reddit, setReddit] = React.useState<Array<string>>([]);
+  const [youtube, setYoutube] = React.useState<Array<string>>([]);
+  const [twitter, setTwitter] = React.useState<Array<string>>([]);
+  const [spotify, setSpotify] = React.useState<Array<string>>([]);
+  const [bbc, setBbc] = React.useState<Array<string>>([]);
 
   React.useEffect(() => {
     const options = {
@@ -36,19 +36,19 @@ const MenuBar = ({ setFeedOptions }: FeedOptionsData): JSX.Element => {
     <div style={{ position: 'relative', zIndex: 1 }}>
       <Grid container spacing={1} style={{ flexGrow: 1 }}>
         <Grid item>
-          <MenuToggleButton text="reddit" childButtonNames={['technology', 'music', 'fashion']} setPlatform={setReddit} />
+          <MenuToggleButton text="reddit" childButtonNames={['hot', 'technology', 'music', 'fashion']} setPlatform={setReddit} />
         </Grid>
         <Grid item>
-          <MenuToggleButton text="youtube" childButtonNames={['crafts', 'food', 'popular']} setPlatform={setYoutube} />
+          <MenuToggleButton text="youtube" childButtonNames={['trending', 'crafts', 'food']} setPlatform={setYoutube} />
         </Grid>
         <Grid item>
           <MenuToggleButton text="twitter" childButtonNames={['trending', 'science', 'news']} setPlatform={setTwitter} />
         </Grid>
         <Grid item>
-          <MenuToggleButton text="spotify" childButtonNames={['rock', 'pop', 'rap']} setPlatform={setSpotify} />
+          <MenuToggleButton text="spotify" childButtonNames={['new', 'rock', 'pop', 'rap']} setPlatform={setSpotify} />
         </Grid>
         <Grid item>
-          <MenuToggleButton text="bbc" childButtonNames={['technology', 'world', 'europe']} setPlatform={setBbc} />
+          <MenuToggleButton text="bbc" childButtonNames={['UK', 'technology', 'world', 'europe']} setPlatform={setBbc} />
         </Grid>
       </Grid>
     </div>

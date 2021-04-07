@@ -43,7 +43,7 @@ const ChildToggleButtons = (childButtonNames: Array<string>): Array<JSX.Element>
 interface MenuToggleButtonData {
   text: string,
   childButtonNames: Array<string>,
-  setPlatform: React.Dispatch<React.SetStateAction<Array<never>>>
+  setPlatform: React.Dispatch<React.SetStateAction<Array<string>>>
 }
 
 const MenuToggleButton = ({
@@ -51,8 +51,8 @@ const MenuToggleButton = ({
 }: MenuToggleButtonData): JSX.Element => {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
-  const [view, setView] = React.useState(() => []);
-  const [active, setActive] = React.useState(false);
+  const [view, setView] = React.useState(() => [childButtonNames[0]]);
+  const [active, setActive] = React.useState(true);
   const anchorRef = React.useRef<HTMLButtonElement>(null);
   const prevOpen = React.useRef(open);
 
