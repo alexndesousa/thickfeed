@@ -17,10 +17,19 @@
 
 .card-container-reddit {
   position: relative;
+  overflow: hidden;
   width: 100%;
   margin-top: 20px;
   max-width: 596px;
 }
+
+.card-container-twitter {
+  position: relative;
+  overflow: hidden;
+  max-width: 550px;
+  width: 100%;
+}
+
 .reddit-footer-logo-container {
   padding-right: 10px;
 }
@@ -53,6 +62,13 @@
   height: 50%;
 }
 
+.twitter-tweet {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+
 
 .responsive-card {
   position: absolute;
@@ -61,5 +77,5 @@
   bottom: 5px;
   right: 0;
   width: 100%;
-  height: 100%
+  height: 100%;
 }
