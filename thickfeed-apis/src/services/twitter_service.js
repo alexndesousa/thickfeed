@@ -47,11 +47,11 @@ const searchTweets = (searchTerm, type = 'popular', limit = 10, maxId = 0, langu
 };
 
 /**
- * Retrieves popular tweets with the given offset and limit for the given country
+ * Retrieves embedded popular tweets with the given offset and limit for the given country
  * @param {number} offset - The amount to offset results by
  * @param {number} limit - The maximum amount of tweets to retrieve
  * @param {string} countryCode - The country for which we wish to retrieve popular tweets from
- * @returns An Array containing stringified JSON of tweet information
+ * @returns An Array containing stringified embeddable tweets
  */
 const getTrendingTweets = async (offset = 0, limit = 30, countryCode = 'GB') => {
   try {
@@ -67,13 +67,13 @@ const getTrendingTweets = async (offset = 0, limit = 30, countryCode = 'GB') => 
 
     const { statuses } = tweets;
 
-    const tweetInfo = await statuses.map((status) => (JSON.stringify({
-      text: status.retweeted_status.full_text || status.full_text,
-      url: status.entities.urls.expanded_url,
-      display_name: status.user.screen_name,
-      username: status.user.name,
-      created: status.created_at,
-    })));
+    const tweetInfo = await statuses.map((status) => JSON.stringify({
+      id: status.id_str,
+      imageWidth: status.entities.media[0].sizes.large.w || 0,
+      imageHeight: status.entities.media[0].sizes.large.h || 0,
+    }));
+
+    // const embeddedTweets = await Promise.all(tweetInfo);
 
     return tweetInfo;
   } catch (error) {
