@@ -33,8 +33,8 @@ const getPopularRedditPosts = async (subreddit = 'popular', after = '', limit = 
     ups: post.data.ups,
     numComments: post.data.num_comments,
     urlOverridenByDest: post.data.url_overridden_by_dest || '',
-    imageWidth: post.preview?.images[0]?.source.width || 0,
-    imageHeight: post.preview?.images[0]?.source.height || 0,
+    imageWidth: post.data.preview?.images[0].source.width || 0,
+    imageHeight: post.data.preview?.images[0].source.height || 0,
     postHint: post.data.post_hint || '',
     permalink: post.data.permalink,
   })));
