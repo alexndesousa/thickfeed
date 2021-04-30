@@ -1,12 +1,25 @@
 import * as React from 'react';
-// import InfiniteScroll from 'react-infinite-scroll-component';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import MenuBar from './components/MenuBar';
-// import { getFeed } from './services/feedService';
-import thickfeedLogo from './assets/thickfeed cropped.jpg';
+import thickfeedLogo from './assets/thickfeed-header.png';
 import './App.css';
 import useScript from './hooks/useScript';
 import Feed from './components/Feed';
+
+const theme = createMuiTheme({
+  typography: {
+    fontFamily: "'Courier New', monospace",
+  },
+  palette: {
+    primary: {
+      main: '#8E7CC3',
+    },
+    secondary: {
+      main: '#B9ADD8',
+    },
+  },
+});
 
 const App = (): JSX.Element => {
   const [loaded, setLoaded] = React.useState(false);
@@ -25,20 +38,22 @@ const App = (): JSX.Element => {
 
   useScript('https://embed.redditmedia.com/widgets/platform.js');
   return (
-    <div className="App">
+    <MuiThemeProvider theme={theme}>
+      <div className="App">
 
-      <header className="App-header">
-        <img src={thickfeedLogo} className="App-logo" alt="logo" />
-        <MenuBar setFeedOptions={setFeedOptions} setLoaded={setLoaded} />
-      </header>
+        <header className="App-header">
+          <img src={thickfeedLogo} className="App-logo" alt="logo" />
+          <MenuBar setFeedOptions={setFeedOptions} setLoaded={setLoaded} />
+        </header>
 
-      {loaded
-        ? null
-        : <div className="App-body" style={{ marginTop: '10vh' }}><CircularProgress /></div>}
+        {loaded
+          ? null
+          : <div className="App-body" style={{ marginTop: '10vh' }}><CircularProgress /></div>}
 
-      <Feed feedOptions={feedOptions} loaded={loaded} setLoaded={setLoaded} />
+        <Feed feedOptions={feedOptions} loaded={loaded} setLoaded={setLoaded} />
 
-    </div>
+      </div>
+    </MuiThemeProvider>
   );
 };
 export default App;

@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
   },
   button: {
     backgroundColor: 'white',
-    color: 'grey',
+    color: 'black',
     borderRadius: '15px',
   },
 }));
@@ -109,8 +109,14 @@ const MenuToggleButton = ({
           aria-haspopup="true"
           disabled={disabled}
           onClick={handleToggle}
-          // eslint-disable-next-line no-nested-ternary
-          style={{ backgroundColor: !disabled ? (active ? 'lightskyblue' : 'white') : 'lightgrey', maxWidth: 'min(15vw, 100px)', maxHeight: '7vw' }}
+          style={{
+            backgroundColor:
+            // eslint-disable-next-line no-nested-ternary
+            !disabled ? (active ? '#B9ADD8' : 'white')
+              : 'lightgrey',
+            maxWidth: 'min(15vw, 100px)',
+            maxHeight: '7vw',
+          }}
         >
           <Typography variant="button" style={{ fontSize: 'min(2.75vw, 14px)' }}>
             {text}
