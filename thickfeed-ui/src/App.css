@@ -14,6 +14,7 @@
 .App-header {
   background-color: #ececec;
   min-height: 20vh;
+  min-width: 318px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -24,6 +25,7 @@
 
 .App-body {
   background-color: #ececec;
+  min-width: 318px;
   display: flex;
   flex-direction: column;
   align-items: center;
