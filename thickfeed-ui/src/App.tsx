@@ -1,14 +1,15 @@
 import * as React from 'react';
-import InfiniteScroll from 'react-infinite-scroll-component';
+// import InfiniteScroll from 'react-infinite-scroll-component';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import MenuBar from './components/MenuBar';
-import { getFeed } from './services/feedService';
+// import { getFeed } from './services/feedService';
 import thickfeedLogo from './assets/thickfeed cropped.jpg';
 import './App.css';
 import useScript from './hooks/useScript';
+import Feed from './components/Feed';
 
 const App = (): JSX.Element => {
-  const [feed, setFeed] = React.useState<Array<JSX.Element>>([]);
-  const [offset, setOffset] = React.useState(0);
+  const [loaded, setLoaded] = React.useState(false);
   const [feedOptions, setFeedOptions] = React.useState({
     spotify: true,
     // spotifyCategories?: [],
@@ -22,43 +23,20 @@ const App = (): JSX.Element => {
     // bbcCategories?: []
   });
 
-  React.useEffect(() => {
-    const limit = 40;
-    getFeed({ ...{ offset, limit }, ...feedOptions }, 500, 500)
-      .then((newFeed) => setFeed(feed.concat(newFeed)));
-    setOffset(offset + limit);
-  }, [feedOptions]);
-
-  const fetchMoreData = () => {
-    const limit = 40;
-    getFeed({ ...{ offset, limit }, ...feedOptions }, 500, 500)
-      .then((newFeed) => setFeed(feed.concat(newFeed)));
-    setOffset(offset + limit);
-  };
   useScript('https://embed.redditmedia.com/widgets/platform.js');
   return (
     <div className="App">
 
       <header className="App-header">
         <img src={thickfeedLogo} className="App-logo" alt="logo" />
+        <MenuBar setFeedOptions={setFeedOptions} setLoaded={setLoaded} />
       </header>
 
-      <div className="App-body">
-        <MenuBar setFeedOptions={setFeedOptions} />
-      </div>
+      {loaded
+        ? null
+        : <div className="App-body" style={{ marginTop: '10vh' }}><CircularProgress /></div>}
 
-      <InfiniteScroll
-        dataLength={feed.length}
-        next={fetchMoreData}
-        hasMore
-        loader={<h4>loading....</h4>}
-        className="App-body"
-        style={{
-          width: '100%',
-        }}
-      >
-        {feed}
-      </InfiniteScroll>
+      <Feed feedOptions={feedOptions} loaded={loaded} setLoaded={setLoaded} />
 
     </div>
   );
