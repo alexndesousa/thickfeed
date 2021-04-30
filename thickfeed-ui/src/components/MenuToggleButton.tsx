@@ -8,6 +8,7 @@ import MenuList from '@material-ui/core/MenuList';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
+import Typography from '@material-ui/core/Typography';
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
   root: {
@@ -43,11 +44,12 @@ const ChildToggleButtons = (childButtonNames: Array<string>): Array<JSX.Element>
 interface MenuToggleButtonData {
   text: string,
   childButtonNames: Array<string>,
-  setPlatform: React.Dispatch<React.SetStateAction<Array<string>>>
+  setPlatform: React.Dispatch<React.SetStateAction<Array<string>>>,
+  disabled: boolean
 }
 
 const MenuToggleButton = ({
-  text, childButtonNames, setPlatform,
+  text, childButtonNames, setPlatform, disabled,
 }: MenuToggleButtonData): JSX.Element => {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
@@ -105,10 +107,14 @@ const MenuToggleButton = ({
           aria-controls={open ? 'menu-list-grow' : undefined}
           disableFocusRipple
           aria-haspopup="true"
+          disabled={disabled}
           onClick={handleToggle}
-          style={{ backgroundColor: active ? 'lightskyblue' : 'white' }}
+          // eslint-disable-next-line no-nested-ternary
+          style={{ backgroundColor: !disabled ? (active ? 'lightskyblue' : 'white') : 'lightgrey', maxWidth: 'min(15vw, 100px)', maxHeight: '7vw' }}
         >
-          {text}
+          <Typography variant="button" style={{ fontSize: 'min(2.75vw, 14px)' }}>
+            {text}
+          </Typography>
         </Button>
         <Popper open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal>
           {({ TransitionProps, placement }) => (

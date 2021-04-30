@@ -3,7 +3,7 @@ import * as React from 'react';
 import Grid from '@material-ui/core/Grid';
 import MenuToggleButton from './MenuToggleButton';
 
-interface FeedOptions {
+export interface FeedOptions {
   spotify: boolean,
   reddit: boolean,
   twitter: boolean,
@@ -12,10 +12,11 @@ interface FeedOptions {
 }
 
 interface FeedOptionsData {
-  setFeedOptions: React.Dispatch<React.SetStateAction<FeedOptions>>
+  setFeedOptions: React.Dispatch<React.SetStateAction<FeedOptions>>,
+  setLoaded: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const MenuBar = ({ setFeedOptions }: FeedOptionsData): JSX.Element => {
+const MenuBar = ({ setFeedOptions, setLoaded }: FeedOptionsData): JSX.Element => {
   const [reddit, setReddit] = React.useState<Array<string>>([]);
   const [youtube, setYoutube] = React.useState<Array<string>>([]);
   const [twitter, setTwitter] = React.useState<Array<string>>([]);
@@ -31,24 +32,25 @@ const MenuBar = ({ setFeedOptions }: FeedOptionsData): JSX.Element => {
       bbc: bbc.length >= 1,
     };
     setFeedOptions(options);
+    setLoaded(false);
   }, [spotify, twitter, reddit, youtube, bbc]);
   return (
     <div style={{ position: 'relative', zIndex: 1 }}>
       <Grid container spacing={1} style={{ flexGrow: 1 }}>
         <Grid item>
-          <MenuToggleButton text="reddit" childButtonNames={['hot', 'technology', 'music', 'fashion']} setPlatform={setReddit} />
+          <MenuToggleButton text="reddit" childButtonNames={['hot']} setPlatform={setReddit} disabled={false} />
         </Grid>
         <Grid item>
-          <MenuToggleButton text="youtube" childButtonNames={['trending', 'crafts', 'food']} setPlatform={setYoutube} />
+          <MenuToggleButton text="youtube" childButtonNames={['trending']} setPlatform={setYoutube} disabled={false} />
         </Grid>
         <Grid item>
-          <MenuToggleButton text="twitter" childButtonNames={['trending', 'science', 'news']} setPlatform={setTwitter} />
+          <MenuToggleButton text="spotify" childButtonNames={['new']} setPlatform={setSpotify} disabled={false} />
         </Grid>
         <Grid item>
-          <MenuToggleButton text="spotify" childButtonNames={['new', 'rock', 'pop', 'rap']} setPlatform={setSpotify} />
+          <MenuToggleButton text="twitter" childButtonNames={['trending', 'science', 'news']} setPlatform={setTwitter} disabled />
         </Grid>
         <Grid item>
-          <MenuToggleButton text="bbc" childButtonNames={['UK', 'technology', 'world', 'europe']} setPlatform={setBbc} />
+          <MenuToggleButton text="news" childButtonNames={['UK', 'technology', 'world', 'europe']} setPlatform={setBbc} disabled />
         </Grid>
       </Grid>
     </div>
