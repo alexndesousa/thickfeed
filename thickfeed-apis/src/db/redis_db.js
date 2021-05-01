@@ -100,18 +100,21 @@ const getRangeOfFeedElements = async (platform, offset, limit) => {
 const setPlatformOffset = async (platform, offset) => {
   const client = redisClient();
   const key = `${platform}_offset`;
-
-  if (platform === 'spotify') {
-    const incrbyAsync = promisify(client.incrby).bind(client);
-    const newOffset = await incrbyAsync(key, offset);
-    console.log(`stored ${platform} with offset of ${newOffset}`);
-  } else {
-    const setAsync = promisify(client.set).bind(client);
-    await setAsync(key, offset);
-    console.log(`stored ${platform} with offset of ${offset}`);
+  try {
+    if (platform === 'spotify') {
+      const incrbyAsync = promisify(client.incrby).bind(client);
+      const newOffset = await incrbyAsync(key, offset);
+      console.log(`stored ${platform} with offset of ${newOffset}`);
+    } else {
+      const setAsync = promisify(client.set).bind(client);
+      await setAsync(key, offset);
+      console.log(`stored ${platform} with offset of ${offset}`);
+    }
+  } catch (err) {
+    console.log(`the following error occured: ${err}`);
+  } finally {
+    client.quit();
   }
-
-  client.quit();
 };
 
 /**
