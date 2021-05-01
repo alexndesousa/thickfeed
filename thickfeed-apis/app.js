@@ -5,11 +5,13 @@ const fs = require('fs');
 const cors = require('cors');
 const { fetchAndStoreFeeds, getFeed } = require('./src/controllers/trending_feed_controller');
 
-const key = fs.readFileSync(`${__dirname}/../certs/selfsigned.key`);
-const cert = fs.readFileSync(`${__dirname}/../certs/selfsigned.crt`);
+const key = fs.readFileSync('/etc/letsencrypt/live/api.thickfeed.co.uk/privkey.pem', 'utf8');
+const cert = fs.readFileSync('/etc/letsencrypt/live/api.thickfeed.co.uk/cert.pem', 'utf8');
+const ca = fs.readFileSync('/etc/letsencrypt/live/api.thickfeed.co.uk/chain.pem', 'utf8');
 const options = {
   key,
   cert,
+  ca,
 };
 
 const app = express();
