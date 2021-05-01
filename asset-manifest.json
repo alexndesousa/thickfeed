@@ -1,0 +1,23 @@
+{
+  "files": {
+    "main.css": "/thickfeed/static/css/main.ed223dd3.chunk.css",
+    "main.js": "/thickfeed/static/js/main.58cd17de.chunk.js",
+    "main.js.map": "/thickfeed/static/js/main.58cd17de.chunk.js.map",
+    "runtime-main.js": "/thickfeed/static/js/runtime-main.d678d564.js",
+    "runtime-main.js.map": "/thickfeed/static/js/runtime-main.d678d564.js.map",
+    "static/js/2.21b0104a.chunk.js": "/thickfeed/static/js/2.21b0104a.chunk.js",
+    "static/js/2.21b0104a.chunk.js.map": "/thickfeed/static/js/2.21b0104a.chunk.js.map",
+    "static/js/3.1ed8366c.chunk.js": "/thickfeed/static/js/3.1ed8366c.chunk.js",
+    "static/js/3.1ed8366c.chunk.js.map": "/thickfeed/static/js/3.1ed8366c.chunk.js.map",
+    "index.html": "/thickfeed/index.html",
+    "static/css/main.ed223dd3.chunk.css.map": "/thickfeed/static/css/main.ed223dd3.chunk.css.map",
+    "static/js/2.21b0104a.chunk.js.LICENSE.txt": "/thickfeed/static/js/2.21b0104a.chunk.js.LICENSE.txt",
+    "static/media/spotifyalbumplaceholder.b280e9b8.svg": "/thickfeed/static/media/spotifyalbumplaceholder.b280e9b8.svg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.d678d564.js",
+    "static/js/2.21b0104a.chunk.js",
+    "static/css/main.ed223dd3.chunk.css",
+    "static/js/main.58cd17de.chunk.js"
+  ]
+}
