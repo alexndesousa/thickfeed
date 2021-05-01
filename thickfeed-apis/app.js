@@ -20,7 +20,8 @@ const corsOptions = {
     'http://localhost:3000',
     'https://localhost:3000',
     'http://localhost:5000',
-    'https://alexndesousa.github.io'],
+    'https://alexndesousa.github.io',
+    'https://thickfeed.co.uk'],
 };
 
 app.use(cors(corsOptions));
