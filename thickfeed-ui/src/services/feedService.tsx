@@ -27,10 +27,9 @@ export interface FeedData {
 
 export const getRawFeedData = async (props: FeedOptions): Promise<FeedData> => {
   const apiHost: string = process.env.REACT_APP_FEED_API_HOST || '';
-  const apiPort: string = process.env.REACT_APP_FEED_API_PORT || '';
 
   const queryParams = `offset=${props.offset}&limit=${props.limit}&spotify=${props.spotify}&reddit=${props.reddit}&twitter=${props.twitter}&youtube=${props.youtube}&bbc=${props.bbc}`;
-  const requestUrl = `https://${apiHost}:${apiPort}/test?${queryParams}`;
+  const requestUrl = `https://${apiHost}/test?${queryParams}`;
   const feedData: Response = await fetch(requestUrl);
   const feedDataJSON: FeedData = await feedData.json();
   return feedDataJSON;
