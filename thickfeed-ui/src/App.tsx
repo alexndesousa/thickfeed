@@ -10,6 +10,9 @@ import Feed from './components/Feed';
 const theme = createMuiTheme({
   typography: {
     fontFamily: "'Courier New', monospace",
+    button: {
+      textTransform: 'none',
+    },
   },
   palette: {
     primary: {

@@ -9,6 +9,7 @@ import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import Typography from '@material-ui/core/Typography';
+import Tooltip from '@material-ui/core/Tooltip';
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
   root: {
@@ -25,15 +26,26 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
 }));
 
 const ChildToggleButtons = (childButtonNames: Array<string>): Array<JSX.Element> => {
+  const [active, setActive] = React.useState(true);
+
+  const toggleActive = () => {
+    setActive(!active);
+  };
   const mappedButtons = childButtonNames.map((text) => (
     <ToggleButton
       value={text}
       key={text}
       aria-label={text}
       style={{
-        borderRadius: 30, marginLeft: '5px', borderColor: 'lightgray', border: '1px solid lightgray',
+        borderRadius: 15,
+        marginLeft: '5px',
+        borderColor: 'lightgray',
+        border: '1px solid lightgray',
+        color: 'black',
+        background: active ? '#B9ADD8' : 'white',
       }}
       disableFocusRipple
+      onClick={() => toggleActive()}
     >
       {text}
     </ToggleButton>
@@ -98,22 +110,14 @@ const MenuToggleButton = ({
 
   const subToggleButtons = ChildToggleButtons(childButtonNames);
 
-  return (
-    <div className={classes.root}>
-      <div>
+  const DisabledButton = () => (
+    <Tooltip title="coming soon">
+      <span>
         <Button
           className={classes.button}
-          ref={anchorRef}
-          aria-controls={open ? 'menu-list-grow' : undefined}
-          disableFocusRipple
-          aria-haspopup="true"
           disabled={disabled}
-          onClick={handleToggle}
           style={{
-            backgroundColor:
-            // eslint-disable-next-line no-nested-ternary
-            !disabled ? (active ? '#B9ADD8' : 'white')
-              : 'lightgrey',
+            backgroundColor: 'lightgrey',
             maxWidth: 'min(15vw, 100px)',
             maxHeight: '7vw',
           }}
@@ -122,6 +126,35 @@ const MenuToggleButton = ({
             {text}
           </Typography>
         </Button>
+      </span>
+    </Tooltip>
+  );
+
+  return (
+    <div className={classes.root}>
+      <div>
+        {disabled
+          ? <DisabledButton />
+          : (
+            <Button
+              className={classes.button}
+              ref={anchorRef}
+              aria-controls={open ? 'menu-list-grow' : undefined}
+              disableFocusRipple
+              aria-haspopup="true"
+              disabled={disabled}
+              onClick={handleToggle}
+              style={{
+                backgroundColor: active ? '#B9ADD8' : 'white',
+                maxWidth: 'min(15vw, 100px)',
+                maxHeight: '7vw',
+              }}
+            >
+              <Typography variant="button" style={{ fontSize: 'min(2.75vw, 14px)' }}>
+                {text}
+              </Typography>
+            </Button>
+          )}
         <Popper open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal>
           {({ TransitionProps, placement }) => (
             <Grow
@@ -130,9 +163,10 @@ const MenuToggleButton = ({
               onExited={TransitionProps?.onExited}
               style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}
             >
-              <Paper style={{
-                borderRadius: 15, paddingRight: '5px',
-              }}
+              <Paper
+                style={{
+                  borderRadius: 15, paddingRight: '5px', marginTop: '5px',
+                }}
               >
                 <ClickAwayListener onClickAway={handleClose}>
                   <MenuList autoFocusItem={open} id="menu-list-grow" onKeyDown={handleListKeyDown} style={{ paddingTop: '3px' }}>
