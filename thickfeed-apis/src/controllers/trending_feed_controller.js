@@ -91,7 +91,7 @@ const fetchAndStoreFeeds = async () => {
     await generateTrendingFeed(options);
 
     // delay for retrieving next batch of feed elements
-    await new Promise((resolve) => setTimeout(resolve, 1000000));
+    await new Promise((resolve) => setTimeout(resolve, 60000));
   }
 };
 
